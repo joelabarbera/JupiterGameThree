@@ -8,17 +8,71 @@
 </head>
 <body>
     <div class = "main-container">
-        <h1>budget game</h1>
+        <div class="notification-bar">
+            <p class="logo">MyFiLi 📶</p>
+            <div class="score-container" id="score-container">
+                <p class="score" style="display:block;">Score: <span id="score">0</span>/8</p>
+            </div>
 
-        <div class = "row">
-            <h3>Morning</h3>
-            <h3 id = "morning"></h3>
-            <button id = "choice1"></button>
-            <button id = "choice2"></button>
         </div>
-        <div class = "row">
-           midday prompt
+        
+        <div class = "welcome-page" id = "welcome-page">
+            <h1>Welcome to Budget Simulator</h1>
+            <p>Learning how to budget protects your financial stance and protects for major abg minor debts</p>
+            <button class = "start-button" onclick="goToInstructionPage()" >Start Game</button>    
+             
         </div>
+
+        <div class = "instruction-page hide" id = "instruction-page">
+            <h2>How to play</h2>
+            <p>You are in NYC for a week (Mon-Fri) and have $700 in your budget. Each day, make decisions on how to spend your money.</p>
+            <p>To win the game, you must have spent all your money or have left over money by the end of the week.</p>
+            <p>To lose the game, you must be in debt by the end of the week.
+
+            <button id = "my-bttn"class = "start-button" onclick="goToMainPage()" >Start Game</button>
+        </div>
+
+        <!--<div class = "start-page hide" id = "start-page"></div>-->
+
+        
+        
+        <div class = "main-page hide" id = "main-page" >
+            <div class = "nav">
+                <button><img src="icons/left-arrow.svg" id="left-arrow" /></button>
+                <h2>Monday </h2>
+                <h3 id = "budget"></h3>
+                <button id="right-arrow"><img src="icons/right-arrow.svg" /></button>
+            </div>
+
+            <div class = "row">
+                <h3>Morning</h3>
+                <h3 id = "morning"></h3>
+                <button id = "morn-choice1"></button>
+                <button id = "morn-choice2"></button>
+            </div>
+            <div class = "row">
+                <h3>Midday</h3>
+                <h3 id = "Midday"></h3>
+                <button id = "mid-choice1"></button>
+                <button id = "mid-choice2"></button>
+            </div>
+            <div class = "row">
+                <h3>Night</h3>
+                <h3 id = "night"></h3>
+                <button id = "night-choice1"></button>
+                <button id = "night-choice2"></button>
+            </div>
+        </div>
+
+        <div class="modal hide" id="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div class="modal-heading">Before you begin your week, decide on these 2 activites. You cannot change after you start.</div>
+                <p id="modal-description"></p>
+            </div>
+        </div>
+
+        
     </div>
 
     <script src="script.js"></script>
