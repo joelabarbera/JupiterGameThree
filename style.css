@@ -1,0 +1,27 @@
+.main-container,
+.welcome-page {
+    display: flex;
+    margin: 1rem auto 15px !important;
+    padding: 0 1rem;
+    border-radius: 15px;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+    text-align: center;
+    gap: 1vh;
+    border: 0.5rem ridge black;
+    background-color: seashell;
+    background-blend-mode: color;
+    outline: 0.5rem ridge lightgray;
+    /* min-height: 65vh; */
+    justify-content: space-between;
+}
+
+
+.row {
+  background-color: white;
+  padding: 0.75rem;
+  border: 1px solid gray;
+  border-radius: 5px;
+  text-align: center;
+}
