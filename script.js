@@ -4,8 +4,8 @@ const morningScenes = [
   {
     prompt: "🍳 Breakfast time! Pick your fuel:",
     choices: [
-      { text: "Eat at home", cost: 5, happiness: 2 },
-      { text: "Eat at a restaurant", cost: 15, happiness: 0 }
+      { text: "Eat at home", cost: 5, happiness: 2, iconPath: '/icons/cook-at-home.svg' },
+      { text: "Eat out", cost: 15, happiness: 0, iconPath: '/icons/order-food.svg' }
     ]
   },
   {
@@ -287,10 +287,27 @@ function game(){
     nightBtn2.disabled = false;
 
     // --- Morning ---
-    const morningPrompt = document.getElementById("morning");
-    morningPrompt.textContent = morningScenes[i].prompt;
-    mornBtn1.textContent = morningScenes[i].choices[0].text + ": $" + morningScenes[i].choices[0].cost;
-    mornBtn2.textContent = morningScenes[i].choices[1].text + ": $" + morningScenes[i].choices[1].cost;
+    const morningDecisionTag = document.getElementById("morning");
+    morningDecisionTag.textContent = morningScenes[i].prompt;
+    // First choice
+    const morningChoice1HeadingTag = document.getElementById("morn-choice1-heading");
+    morningChoice1HeadingTag.textContent = morningScenes[i].choices[0].text;
+
+    const morningChoice1PriceTag = document.getElementById("morn-choice1-price");
+    morningChoice1PriceTag.textContent = "$" + morningScenes[i].choices[0].cost;
+
+    const morningChoice1Icon = document.getElementById("morn-choice1-icon");
+    morningChoice1Icon.src = morningScenes[i].choices[0].iconPath;
+    
+    // Second choice
+    const morningChoice2HeadingTag = document.getElementById("morn-choice2-heading")
+    morningChoice2HeadingTag.textContent = morningScenes[i].choices[1].text
+
+    const morningChoice2PriceTag = document.getElementById("morn-choice2-price")
+    morningChoice2PriceTag.textContent = "$" + morningScenes[i].choices[1].cost
+
+    const morningChoice2Icon = document.getElementById("morn-choice2-icon");
+    morningChoice2Icon.src = morningScenes[i].choices[1].iconPath;
 
     mornBtn1.addEventListener("click", function () {
       mornBtn1.textContent = "Happiness: " + morningScenes[i].choices[0].happiness;
@@ -360,30 +377,6 @@ function game(){
   }else{
     console.log("done");
   }
-}
-
-
-
-
-function openModal(problemID){
-    const modal = document.getElementById("modal");
-
-    const modalTitleTag = document.getElementById("modal-title");
-    const modalIconTag = document.getElementById("modal-icon");
-    const descriptionTag = document.getElementById("modal-description");
-
-    
-
-    
-}
-
-function closeModal(){
-    const modal = document.getElementById("modal");
-    
-    modal.style.display = 'none';
-
-    // The function below is called to determine if the user has found all the problems
-    gameComplete();
 }
 
 

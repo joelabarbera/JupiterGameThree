@@ -79,8 +79,19 @@
                 <div class = "row">
                     <h3>Morning</h3>
                     <h3 id = "morning"></h3>
-                    <button id = "morn-choice1"></button>
-                    <button id = "morn-choice2"></button>
+                    <div class = "choice-list">
+                        <button class = "choice" id = "morn-choice1">
+                            <img src="icons/placeholder.svg" id = "morn-choice1-icon"/>
+                            <h3 id = "morn-choice1-heading"></h3>
+                            <p id = "morn-choice1-price"></p>
+                        </button>
+                        <button class = "choice" id = "morn-choice2">
+                            <img src="icons/placeholder.svg" id = "morn-choice2-icon"/>
+                            <h3 id = "morn-choice2-heading"></h3>
+                            <p id = "morn-choice2-price"></p>
+                        </button>
+                    </div>
+                    
                 </div>
                 <div class = "row">
                     <h3>Midday</h3>
@@ -99,13 +110,6 @@
             
         </div>
 
-        <div class="modal hide" id="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <div class="modal-heading">Before you begin your week, decide on these 2 activites. You cannot change after you start.</div>
-                <p id="modal-description"></p>
-            </div>
-        </div>
 
         <div class = "hide" id ="end-screen">
             <h1>DONE</h1>
