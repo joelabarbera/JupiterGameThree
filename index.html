@@ -17,15 +17,19 @@
         </div>
         
         <div class = "welcome-page" id = "welcome-page">
-            <h1>Welcome to Budget Simulator</h1>
-            <p>Learning how to budget protects your financial stance and protects for major abg minor debts</p>
+            <h1>
+                <span>Welcome to</span>
+                <span style="color: rgb(9, 74, 194);"> <i>Budget Simulator</i> </span>
+                 
+            </h1>
+            <p style="text-align: center; font-size: 14px;">Knowing how to create a budget helps you stay out of debt, <br> whether big and small. </p>
             <button class = "start-button" onclick="goToInstructionPage()" >Start Game</button>    
              
         </div>
 
         <div class = "instruction-page hide" id = "instruction-page">
             <h2>How to play</h2>
-            <p>You are in NYC for a week (Mon-Fri) and have $700 in your budget. Each day, make decisions on how to spend your money.</p>
+            <p>You have a job in NYC and have $700 to spend for the week (Monday to Friday). Each day, make decisions on how to spend your money.</p>
             <p>To win the game, you must have spent all your money or have left over money by the end of the week.</p>
             <p>To lose the game, you must be in debt by the end of the week.<br><br></p>
 
@@ -33,33 +37,45 @@
 
             <div class = "row">
                 <form>
-                    <label for="invest-amount">How much do you want to invest your money in the stock market?</label>
-                    <input type="number" id="invest-amount" name="invest-amount"/>
-                </form>
-            </div>
+                    <label for="rent-amount">Here is your rent for this week:</label>
+                    <input type="number" id="rent-amount" name="rent-amount" value="500" disabled />
 
-            <div class = "row">
-                <form>
+                    <br>
+                    <br>
+
+                    <label for="invest-amount">How much do you want to invest your money?</label>
+                    <input type="number" id="invest-amount" name="invest-amount"/>
+
+                    <br>
+                    <br>
+                    
                     <label for="emergency-amount">How much do you want to put into your emergency savings?</label>
                     <input type="number" id="emergency-amount" name="emergency-amount"/>
+
+                    <br>
+                    <br>
+                    <button type="submit" id = "my-bttn"class = "start-button" onclick="goToMainPage(event)" >Start Game</button>
                 </form>
             </div>
-            <button id = "my-bttn"class = "start-button" onclick="goToMainPage()" >Start Game</button>
+            
         </div>
 
        
-
-        
-        
         <div class = "main-page hide" id = "main-page" >
             <div class = "nav">
                 <button><img src="icons/left-arrow.svg" id="left-arrow" /></button>
-                <h2>Monday </h2>
+                <h2 id = "week-day"> </h2>
                 <h3 id = "budget"></h3>
                 <button id="right-arrow"><img src="icons/right-arrow.svg" /></button>
             </div>
 
+            
+
             <div class = "activites">
+                <div class="progress-bar">
+                    <div class="bar" id="bar"></div>
+                </div>
+                <div class = "budget" id = "budget"></div>
                 <div class = "row">
                     <h3>Morning</h3>
                     <h3 id = "morning"></h3>
@@ -89,6 +105,13 @@
                 <div class="modal-heading">Before you begin your week, decide on these 2 activites. You cannot change after you start.</div>
                 <p id="modal-description"></p>
             </div>
+        </div>
+
+        <div class = "hide" id ="end-screen">
+            <h1>DONE</h1>
+            <h3 id = "final-budget"></h3>
+            <h3 id = "hScore"></h3>
+            <h3 id = "final-happy"></h3>
         </div>
 
         
