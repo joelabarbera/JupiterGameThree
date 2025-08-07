@@ -1,37 +1,42 @@
 'use strict'
+document.getElementById("start-button").addEventListener("click", goToInstructionPage); //start button on welcome page
+document.getElementById("my-bttn").addEventListener("click", goToMainPage); //start button on instructions pa
+document.getElementById("reload-btn").addEventListener("click", function () {
+    window.location.reload();
+}); //reload button
+
 
 const morningScenes = [
   {
-    prompt: "🍳 Breakfast time! Pick your fuel:",
+    prompt: "How to start the day:",
     choices: [
-      { text: "Eat at home", cost: 5, happiness: 2, iconPath: '/icons/cook-at-home.svg' },
-      { text: "Eat out", cost: 15, happiness: 0, iconPath: '/icons/order-food.svg' }
+      { text: "Doordash", cost: 15, happiness: 3, iconPath: '/icons/cook-at-home.svg' },
+      { text: "Make eggs at home", cost: 1, happiness: 1, iconPath: '/icons/order-food.svg' }
     ]
   },
   {
-    prompt: "🚶 You're getting to work. How will you travel?",
+    prompt: "Breakfast time! Pick your fuel:",
     choices: [
-      { text: "Take the train", cost: 2.90, happiness: 1 },
-      { text: "Take an Uber", cost: 18, happiness: -1 }
-    ]
-  },
-  
-  {
-    prompt: "🌞 You wake up and need your caffeine fix. What do you do?",
-    choices: [
-      { text: "Go to Starbucks drive-thru", cost: 6, happiness: 3 },
-      { text: "Make coffee at home", cost: 1, happiness: 2 }
+      { text: "Eat at home", cost: 5, happiness: 0, iconPath: '/icons/cook-at-home.svg' },
+      { text: "Eat out with friends", cost: 15, happiness: 1, iconPath: '/icons/order-food.svg' }
     ]
   },
   {
-    prompt: "😴 You’re still sleepy. What do you do?",
+    prompt: "You wake up and need your caffeine fix. What do you do?",
     choices: [
-      { text: "Sleep in and skip your routine", cost: 0, happiness: -2 },
-      { text: "Take a morning walk in the park", cost: 0, happiness: 2 }
+      { text: "Go to Starbucks", cost: 6, happiness: 1, iconPath: '/icons/starbucks.svg' },
+      { text: "Make coffee at home", cost: 1, happiness: 0, iconPath: '/icons/coffee-machine.svg' }
     ]
   },
   {
-    prompt: "🍩 Sweet tooth strikes! What do you grab?",
+    prompt: "You want to exercise. Where do you go?",
+    choices: [
+      { text: "Go for a jog", cost: 0, happiness: 1, iconPath: '/icons/jog.svg' },
+      { text: "Go to the gym", cost: 5, happiness: 1, iconPath: '/icons/gym.svg' }
+    ]
+  },
+  {
+    prompt: "Sweet tooth strikes! What do you grab?",
     choices: [
       { text: "Buy donut and juice", cost: 4, happiness: 1 },
       { text: "Refill MetroCard instead", cost: 33, happiness: 1 }
@@ -42,52 +47,38 @@ const morningScenes = [
 
 const middayScenes = [
   {
-    prompt: "🥗 Lunch break! What's the move?",
+    prompt: "You see new trendy clothes in the store. Do you buy it?",
     choices: [
-      { text: "Eat lunch out with a friend", cost: 12, happiness: 3 },
-      { text: "Skip lunch to save money", cost: 0, happiness: -2 }
+      { text: "Yes", cost: 50, happiness: 1, iconPath: 'icons/clothe.svg' },
+      { text: "No", cost: 0, happiness: 0, iconPath: 'icons/X.svg' }
     ]
   },
   {
-    prompt: "🧼 Time to handle responsibilities. What do you pay for?",
+    prompt: "Lunch time! How do you eat? ",
     choices: [
-      { text: "Pay your phone bill", cost: 25, happiness: 0 },
-      { text: "Put $20 in emergency fund", cost: 20, happiness: 0 }
+      { text: "Eat at home", cost: 5, happiness: 0, iconPath: '/icons/cook-at-home.svg' },
+      { text: "Eat out with friends", cost: 20, happiness: 1, iconPath: '/icons/order-food.svg' }
     ]
   },
   {
-    prompt: "📦 You're running low on supplies. What do you do?",
+    prompt: "Got some free time. How do you spend it?",
     choices: [
-      { text: "Buy groceries", cost: 40, happiness: 2 },
-      { text: "Order delivery instead", cost: 20, happiness: 3 }
+      { text: "Volunteer at animal shelter", cost: 0, happiness: 1, iconPath: '/icons/dog.svg' },
+      { text: "Go shopping at the mall", cost: 50, happiness: 1, iconPath: '/icons/mall.svg' }
     ]
   },
   {
-    prompt: "🐾 Got some free time. How do you spend it?",
+    prompt: "A new hot video game just released. What do you do?",
     choices: [
-      { text: "Volunteer at animal shelter", cost: 0, happiness: 4 },
-      { text: "Go shopping at the mall", cost: 30, happiness: 2 }
+      { text: "Buy it", cost: 50, happiness: 1, iconPath: 'icons/video-game.svg' },
+      { text: "Skip it", cost: 0, happiness: 0 , iconPath: 'icons/X.svg'}
     ]
   },
   {
-    prompt: "🎮 Online deal alert! What's your call?",
+    prompt: "Feeling curious. Choose an activity:",
     choices: [
-      { text: "Buy a video game skin", cost: 10, happiness: 1 },
-      { text: "Save $50 for future goal", cost: 50, happiness: 1 }
-    ]
-  },
-  {
-    prompt: "📚 Feeling curious. Choose an activity:",
-    choices: [
-      { text: "Visit the library", cost: 0, happiness: 2 },
-      { text: "Scroll your phone aimlessly", cost: 0, happiness: -1 }
-    ]
-  },
-  {
-    prompt: "😷 Uh-oh! A minor emergency.",
-    choices: [
-      { text: "Buy cold medicine", cost: 12, happiness: -1 },
-      { text: "Ignore it and push through", cost: 0, happiness: -2 }
+      { text: "Visit the library", cost: 0, happiness: 0, iconPath: 'icons/library.svg' },
+      { text: "Go to a museum", cost: 10, happiness: 1, iconPath: 'icons/museum.svg'}
     ]
   },
   {
@@ -108,24 +99,31 @@ const middayScenes = [
 
 const nightScenes = [
   {
-    prompt: "🎬 Your friends invite you out. What's the plan?",
+    prompt: "Dinner time! How do you eat? ",
     choices: [
-      { text: "Go to the movies", cost: 15, happiness: 4 },
-      { text: "Skip and stay home", cost: 0, happiness: -1 }
+      { text: "Eat at home", cost: 5, happiness: 0 },
+      { text: "Eat out with friends", cost: 20, happiness: 1 }
     ]
   },
   {
-    prompt: "🎡 Feeling bored. What sounds more fun?",
+    prompt: "Your friends want to hang out. Choose an activity.",
     choices: [
-      { text: "Go to the arcade", cost: 12, happiness: 3 },
-      { text: "Play video games at home", cost: 0, happiness: 2 }
+      { text: "Go to the movies", cost: 25, happiness: 1 },
+      { text: "Play video games", cost: 0, happiness: 0 }
     ]
   },
   {
-    prompt: "⚾ You've been dying to go to a game...",
+    prompt: "Your favorite singer is having a concert this night. What do you do?",
     choices: [
-      { text: "Buy Yankees tickets", cost: 35, happiness: 5 },
-      { text: "Save the money and watch at home", cost: 0, happiness: 1 }
+      { text: "Have a blast at the concert", cost: 50, happiness: 1 },
+      { text: "Stay home", cost: 0, happiness: 0 }
+    ]
+  },
+  {
+    prompt: "Your feeling extra hungry. How do you get food?",
+    choices: [
+      { text: "Cook your own food", cost: 5, happiness: 0, iconPath: '/icons/cook-at-home.svg' },
+      { text: "Order Food", cost: 20, happiness: 1, iconPath: '/icons/order-food.svg' }
     ]
   },
   {
@@ -150,7 +148,9 @@ const nightScenes = [
     ]
   }
 ];
+const budgetElement = document.getElementById("budget-display");
 
+//End Screen
 function displayEnd(){
   let message = "";
   
@@ -177,6 +177,11 @@ function displayEnd(){
   let finBudget = document.getElementById("final-budget");
   if (budget >= 0){
     finBudget.innerText = "Congrats you did not go over budget! Final Total: $" + budget;
+    confetti({
+      particleCount: 250,
+      spread: 80,
+      origin: { y: 0.6}
+    })
   }else{
     finBudget.innerText = "You failed. Budget: " +  budget.toFixed(2);
   }
@@ -191,6 +196,12 @@ function goToInstructionPage(){
   instructionPageTag.classList.remove("hide");
 }
 
+function updateHappinessBar(){
+  const bar = document.getElementById("bar");
+  const percent = Math.max(0, Math.min(100, (happy/50)*100)); //0-100 happiness 
+  bar.style.width = percent + "%";
+}
+
 // Main menu start bttn logic
 function goToMainPage(event){
   event.preventDefault();
@@ -199,9 +210,12 @@ function goToMainPage(event){
   const rentAmount = parseInt(document.getElementById('rent-amount').value);
   const investAmount = parseInt(document.getElementById('invest-amount').value);
   const emergencyAmount = parseInt(document.getElementById('emergency-amount').value);
+  budget = budget - investAmount.toFixed(2);
+  budget = budget - emergencyAmount.toFixed(2);
 
-  /*
+
   
+  /*
   if (rentAmount + investAmount + emergencyAmount > 700){
     alert("You have exceeded the budget. Please try again");
   }
@@ -209,7 +223,8 @@ function goToMainPage(event){
     alert("You are missing an input. Put 0 if you don't want to put any money into it.")
   }
   else{
-  */
+    */
+  
     const instructionPageTag = document.getElementById("instruction-page");
     instructionPageTag.classList.add("hide");
 
@@ -218,11 +233,12 @@ function goToMainPage(event){
     
     game();
     console.log("test");
+    
   //}
 
 }
 
-
+//Event listeners for arrows
 let i = 0;
 
 let rArrow = document.getElementById('right-arrow');
@@ -248,8 +264,8 @@ lArrow.addEventListener("click", function () {
 let budget = 600;
 let happy = 0;
 
+//Main Game
 function game(){
-  const budgetElement = document.getElementById("budget");
 
   budgetElement.innerText = "Budget: $" + budget;
 
@@ -286,9 +302,10 @@ function game(){
     nightBtn1.disabled = false;
     nightBtn2.disabled = false;
 
-    // --- Morning ---
+    // Populate Morning Choices
     const morningDecisionTag = document.getElementById("morning");
     morningDecisionTag.textContent = morningScenes[i].prompt;
+    
     // First choice
     const morningChoice1HeadingTag = document.getElementById("morn-choice1-heading");
     morningChoice1HeadingTag.textContent = morningScenes[i].choices[0].text;
@@ -296,8 +313,11 @@ function game(){
     const morningChoice1PriceTag = document.getElementById("morn-choice1-price");
     morningChoice1PriceTag.textContent = "$" + morningScenes[i].choices[0].cost;
 
-    const morningChoice1Icon = document.getElementById("morn-choice1-icon");
-    morningChoice1Icon.src = morningScenes[i].choices[0].iconPath;
+    const morningChoice1IconTag = document.getElementById("morn-choice1-icon");
+    morningChoice1IconTag.src = morningScenes[i].choices[0].iconPath;
+
+    const morningChoice1HappinessTag = document.getElementById("morn-choice1-happiness");
+    morningChoice1HappinessTag.textContent = morningScenes[i].choices[0].happiness
     
     // Second choice
     const morningChoice2HeadingTag = document.getElementById("morn-choice2-heading")
@@ -309,35 +329,63 @@ function game(){
     const morningChoice2Icon = document.getElementById("morn-choice2-icon");
     morningChoice2Icon.src = morningScenes[i].choices[1].iconPath;
 
+    const morningChoice2HappinessTag = document.getElementById("morn-choice2-happiness");
+    morningChoice2HappinessTag.textContent = morningScenes[i].choices[1].happiness
+
     mornBtn1.addEventListener("click", function () {
-      mornBtn1.textContent = "Happiness: " + morningScenes[i].choices[0].happiness;
       budget = budget - morningScenes[i].choices[0].cost;
       happy = happy + morningScenes[i].choices[0].happiness;
-      document.getElementById("budget").innerText = "Budget: $" + budget.toFixed(2);
+      updateHappinessBar();
+      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
       mornBtn1.disabled = true;
       mornBtn2.disabled = true;
     });
 
     mornBtn2.addEventListener("click", function () {
-      mornBtn2.textContent = "Happiness: " + morningScenes[i].choices[1].happiness;
       budget = budget - morningScenes[i].choices[1].cost;
       happy = happy + morningScenes[i].choices[1].happiness;
-      document.getElementById("budget").innerText = "Budget: $" + budget.toFixed(2);
+      updateHappinessBar();
+      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
       mornBtn1.disabled = true;
       mornBtn2.disabled = true;
     });
 
-    // --- Midday ---
-    const middayPrompt = document.getElementById("Midday");
-    middayPrompt.textContent = middayScenes[i].prompt;
-    midBtn1.textContent = middayScenes[i].choices[0].text + ": $" + middayScenes[i].choices[0].cost;
-    midBtn2.textContent = middayScenes[i].choices[1].text + ": $" + middayScenes[i].choices[1].cost;
+    // Populate Midday Choices
+    const middayDecisionTag = document.getElementById("midday");
+    middayDecisionTag.textContent = middayScenes[i].prompt;
+    
+    // First choice
+    const middayChoice1HeadingTag = document.getElementById("midday-choice1-heading");
+    middayChoice1HeadingTag.textContent = middayScenes[i].choices[0].text;
+
+    const middayChoice1PriceTag = document.getElementById("midday-choice1-price");
+    middayChoice1PriceTag.textContent = "$" + middayScenes[i].choices[0].cost;
+
+    const middayChoice1IconTag = document.getElementById("midday-choice1-icon");
+    middayChoice1IconTag.src = middayScenes[i].choices[0].iconPath;
+
+    const middayChoice1HappinessTag = document.getElementById("midday-choice1-happiness");
+    middayChoice1HappinessTag.textContent = middayScenes[i].choices[0].happiness
+    
+    // Second choice
+    const middayChoice2HeadingTag = document.getElementById("midday-choice2-heading")
+    middayChoice2HeadingTag.textContent = middayScenes[i].choices[1].text
+
+    const middayChoice2PriceTag = document.getElementById("midday-choice2-price")
+    middayChoice2PriceTag.textContent = "$" + middayScenes[i].choices[1].cost
+
+    const middayChoice2Icon = document.getElementById("midday-choice2-icon");
+    middayChoice2Icon.src = middayScenes[i].choices[1].iconPath;
+
+    const middayChoice2HappinessTag = document.getElementById("midday-choice2-happiness");
+    middayChoice2HappinessTag.textContent = middayScenes[i].choices[1].happiness
 
     midBtn1.addEventListener("click", function () {
       midBtn1.textContent = "Happiness: " + middayScenes[i].choices[0].happiness;
       budget = budget - middayScenes[i].choices[0].cost;
       happy = happy + middayScenes[i].choices[0].happiness;
-      document.getElementById("budget").innerText = "Budget: $" + budget.toFixed(2);
+      updateHappinessBar();
+      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
       midBtn1.disabled = true;
       midBtn2.disabled = true;
     });
@@ -346,7 +394,8 @@ function game(){
       midBtn2.textContent = "Happiness: " + middayScenes[i].choices[1].happiness;
       budget = budget - middayScenes[i].choices[1].cost;
       happy = happy + middayScenes[i].choices[1].happiness;
-      document.getElementById("budget").innerText = "Budget: $" + budget.toFixed(2);
+      updateHappinessBar();
+      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
       midBtn1.disabled = true;
       midBtn2.disabled = true;
     });
@@ -361,7 +410,8 @@ function game(){
       nightBtn1.textContent = "Happiness: " + nightScenes[i].choices[0].happiness;
       budget = budget - nightScenes[i].choices[0].cost;
       happy = happy + nightScenes[i].choices[0].happiness;
-      document.getElementById("budget").innerText = "Budget: $" + budget.toFixed(2);
+      updateHappinessBar();
+      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
       nightBtn1.disabled = true;
       nightBtn2.disabled = true;
     });
@@ -370,7 +420,8 @@ function game(){
       nightBtn2.textContent = "Happiness: " + nightScenes[i].choices[1].happiness;
       budget = budget - nightScenes[i].choices[1].cost;
       happy = happy + nightScenes[i].choices[1].happiness;
-      document.getElementById("budget").innerText = "Budget: $" + budget.toFixed(2);
+      updateHappinessBar();
+      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
       nightBtn1.disabled = true;
       nightBtn2.disabled = true;
     });
