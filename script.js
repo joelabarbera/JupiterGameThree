@@ -2,18 +2,11 @@
 document.getElementById("start-button").addEventListener("click", goToInstructionPage); //start button on welcome page
 document.getElementById("my-bttn").addEventListener("click", goToMainPage); //start button on instructions pa
 document.getElementById("reload-btn").addEventListener("click", function () {
-    window.location.reload();
+window.location.reload();
 }); //reload button
 
 
 const morningScenes = [
-  {
-    prompt: "How to start the day:",
-    choices: [
-      { text: "Doordash", cost: 15, happiness: 3, iconPath: '/icons/cook-at-home.svg' },
-      { text: "Make eggs at home", cost: 1, happiness: 1, iconPath: '/icons/order-food.svg' }
-    ]
-  },
   {
     prompt: "Breakfast time! Pick your fuel:",
     choices: [
@@ -35,6 +28,7 @@ const morningScenes = [
       { text: "Go to the gym", cost: 5, happiness: 1, iconPath: '/icons/gym.svg' }
     ]
   },
+  /*
   {
     prompt: "Sweet tooth strikes! What do you grab?",
     choices: [
@@ -42,6 +36,14 @@ const morningScenes = [
       { text: "Refill MetroCard instead", cost: 33, happiness: 1 }
     ]
   }
+  {
+    prompt: "How to start the day:",
+    choices: [
+      { text: "Doordash", cost: 15, happiness: 3, iconPath: '/icons/cook-at-home.svg' },
+      { text: "Make eggs at home", cost: 1, happiness: 1, iconPath: '/icons/order-food.svg' }
+    ]
+  },
+  */
     
 ];
 
@@ -81,6 +83,7 @@ const middayScenes = [
       { text: "Go to a museum", cost: 10, happiness: 1, iconPath: 'icons/museum.svg'}
     ]
   },
+  /*
   {
     prompt: "🔌 Your phone's on 1%. What now?",
     choices: [
@@ -95,28 +98,22 @@ const middayScenes = [
       { text: "Hope it recovers naturally", cost: 0, happiness: -5 }
     ]
   }
+    */
 ];
 
 const nightScenes = [
   {
-    prompt: "Dinner time! How do you eat? ",
-    choices: [
-      { text: "Eat at home", cost: 5, happiness: 0 },
-      { text: "Eat out with friends", cost: 20, happiness: 1 }
-    ]
-  },
-  {
     prompt: "Your friends want to hang out. Choose an activity.",
     choices: [
-      { text: "Go to the movies", cost: 25, happiness: 1 },
-      { text: "Play video games", cost: 0, happiness: 0 }
+      { text: "Go to the movies", cost: 25, happiness: 1, iconPath: 'icons/movie-theater.svg' },
+      { text: "Play video games", cost: 0, happiness: 0, iconPath: 'icons/video-game.svg'}
     ]
   },
   {
     prompt: "Your favorite singer is having a concert this night. What do you do?",
     choices: [
-      { text: "Have a blast at the concert", cost: 50, happiness: 1 },
-      { text: "Stay home", cost: 0, happiness: 0 }
+      { text: "Have a blast at the concert", cost: 50, happiness: 1, iconPath: 'icons/concert.svg' },
+      { text: "Live stream from home", cost: 0, happiness: 0, iconPath: 'icons/tv.svg' }
     ]
   },
   {
@@ -126,6 +123,7 @@ const nightScenes = [
       { text: "Order Food", cost: 20, happiness: 1, iconPath: '/icons/order-food.svg' }
     ]
   },
+  /*
   {
     prompt: "🍕 It's dinner time. What do you eat?",
     choices: [
@@ -147,6 +145,7 @@ const nightScenes = [
       { text: "Buy takeout dessert", cost: 7, happiness: 2 }
     ]
   }
+    */
 ];
 const budgetElement = document.getElementById("budget-display");
 
@@ -196,9 +195,14 @@ function goToInstructionPage(){
   instructionPageTag.classList.remove("hide");
 }
 
+const userProgress = {
+  happiness: 0
+}
+
+
 function updateHappinessBar(){
   const bar = document.getElementById("bar");
-  const percent = Math.max(0, Math.min(100, (happy/50)*100)); //0-100 happiness 
+  const percent = Math.max(0, Math.min(100, (userProgress.happiness/50)*100)); //0-100 happiness 
   bar.style.width = percent + "%";
 }
 
@@ -262,7 +266,7 @@ lArrow.addEventListener("click", function () {
 }); 
 
 let budget = 600;
-let happy = 0;
+
 
 //Main Game
 function game(){
@@ -302,128 +306,198 @@ function game(){
     nightBtn1.disabled = false;
     nightBtn2.disabled = false;
 
+    // Randomly pick a morning activity (repeats activity)
+    const morningActivityIndex = Math.floor(Math.random() * (morningScenes.length));
+    const morningActivity = morningScenes[morningActivityIndex];
+
     // Populate Morning Choices
     const morningDecisionTag = document.getElementById("morning");
-    morningDecisionTag.textContent = morningScenes[i].prompt;
+    morningDecisionTag.textContent = morningActivity.prompt;
     
     // First choice
     const morningChoice1HeadingTag = document.getElementById("morn-choice1-heading");
-    morningChoice1HeadingTag.textContent = morningScenes[i].choices[0].text;
+    morningChoice1HeadingTag.textContent = morningActivity.choices[0].text;
 
     const morningChoice1PriceTag = document.getElementById("morn-choice1-price");
-    morningChoice1PriceTag.textContent = "$" + morningScenes[i].choices[0].cost;
+    morningChoice1PriceTag.textContent = "$" + morningActivity.choices[0].cost;
 
     const morningChoice1IconTag = document.getElementById("morn-choice1-icon");
-    morningChoice1IconTag.src = morningScenes[i].choices[0].iconPath;
-
-    const morningChoice1HappinessTag = document.getElementById("morn-choice1-happiness");
-    morningChoice1HappinessTag.textContent = morningScenes[i].choices[0].happiness
+    morningChoice1IconTag.src = morningActivity.choices[0].iconPath;
     
     // Second choice
     const morningChoice2HeadingTag = document.getElementById("morn-choice2-heading")
-    morningChoice2HeadingTag.textContent = morningScenes[i].choices[1].text
+    morningChoice2HeadingTag.textContent = morningActivity.choices[1].text
 
     const morningChoice2PriceTag = document.getElementById("morn-choice2-price")
-    morningChoice2PriceTag.textContent = "$" + morningScenes[i].choices[1].cost
+    morningChoice2PriceTag.textContent = "$" + morningActivity.choices[1].cost
 
     const morningChoice2Icon = document.getElementById("morn-choice2-icon");
-    morningChoice2Icon.src = morningScenes[i].choices[1].iconPath;
-
-    const morningChoice2HappinessTag = document.getElementById("morn-choice2-happiness");
-    morningChoice2HappinessTag.textContent = morningScenes[i].choices[1].happiness
+    morningChoice2Icon.src = morningActivity.choices[1].iconPath;
 
     mornBtn1.addEventListener("click", function () {
-      budget = budget - morningScenes[i].choices[0].cost;
-      happy = happy + morningScenes[i].choices[0].happiness;
-      updateHappinessBar();
+      // Update budget
+      budget = budget - morningActivity.choices[0].cost;
       document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
-      mornBtn1.disabled = true;
-      mornBtn2.disabled = true;
+
+      // Update happiness
+      userProgress.happiness = userProgress.happiness + morningActivity.choices[0].happiness;
+      updateHappinessBar();
+
+      // Update style of button clicked
+      mornBtn1.style.opacity = "100%";
+      mornBtn1.style.border = "3px solid #2E588D";
+
+      // Update style of other button
+      mornBtn2.style.opacity = "30%";
+      mornBtn2.style.border = "";
     });
 
     mornBtn2.addEventListener("click", function () {
-      budget = budget - morningScenes[i].choices[1].cost;
-      happy = happy + morningScenes[i].choices[1].happiness;
-      updateHappinessBar();
+      // Update budget
+      budget = budget - morningActivity.choices[1].cost;
       document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
-      mornBtn1.disabled = true;
-      mornBtn2.disabled = true;
+
+      // Update happiness
+      userProgress.happiness = userProgress.happiness + morningActivity.choices[1].happiness;
+      updateHappinessBar();
+
+      // Update style of button clicked
+      mornBtn2.style.opacity = "100%"
+      mornBtn2.style.border = "3px solid #2E588D"
+
+      // Update style of other button
+      mornBtn1.style.opacity = "30%"
+      mornBtn1.style.border = ""
     });
+
+    // Randomly pick a midday activity (repeats activity)
+    const middayActivityIndex = Math.floor(Math.random() * (middayScenes.length));
+    const middayActivity = middayScenes[middayActivityIndex];
 
     // Populate Midday Choices
     const middayDecisionTag = document.getElementById("midday");
-    middayDecisionTag.textContent = middayScenes[i].prompt;
+    middayDecisionTag.textContent = middayActivity.prompt;
     
     // First choice
     const middayChoice1HeadingTag = document.getElementById("midday-choice1-heading");
-    middayChoice1HeadingTag.textContent = middayScenes[i].choices[0].text;
+    middayChoice1HeadingTag.textContent = middayActivity.choices[0].text;
 
     const middayChoice1PriceTag = document.getElementById("midday-choice1-price");
-    middayChoice1PriceTag.textContent = "$" + middayScenes[i].choices[0].cost;
+    middayChoice1PriceTag.textContent = "$" + middayActivity.choices[0].cost;
 
     const middayChoice1IconTag = document.getElementById("midday-choice1-icon");
-    middayChoice1IconTag.src = middayScenes[i].choices[0].iconPath;
+    middayChoice1IconTag.src = middayActivity.choices[0].iconPath;
 
-    const middayChoice1HappinessTag = document.getElementById("midday-choice1-happiness");
-    middayChoice1HappinessTag.textContent = middayScenes[i].choices[0].happiness
     
     // Second choice
     const middayChoice2HeadingTag = document.getElementById("midday-choice2-heading")
-    middayChoice2HeadingTag.textContent = middayScenes[i].choices[1].text
+    middayChoice2HeadingTag.textContent = middayActivity.choices[1].text
 
     const middayChoice2PriceTag = document.getElementById("midday-choice2-price")
-    middayChoice2PriceTag.textContent = "$" + middayScenes[i].choices[1].cost
+    middayChoice2PriceTag.textContent = "$" + middayActivity.choices[1].cost
 
     const middayChoice2Icon = document.getElementById("midday-choice2-icon");
-    middayChoice2Icon.src = middayScenes[i].choices[1].iconPath;
-
-    const middayChoice2HappinessTag = document.getElementById("midday-choice2-happiness");
-    middayChoice2HappinessTag.textContent = middayScenes[i].choices[1].happiness
+    middayChoice2Icon.src = middayActivity.choices[1].iconPath;
 
     midBtn1.addEventListener("click", function () {
-      midBtn1.textContent = "Happiness: " + middayScenes[i].choices[0].happiness;
-      budget = budget - middayScenes[i].choices[0].cost;
-      happy = happy + middayScenes[i].choices[0].happiness;
-      updateHappinessBar();
+      // Update budget
+      budget = budget - middayActivity.choices[0].cost;
       document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
-      midBtn1.disabled = true;
-      midBtn2.disabled = true;
+
+      // Update happiness
+      userProgress.happiness = userProgress.happiness + middayActivity.choices[0].happiness;
+      updateHappinessBar();
+
+      // Update style of button clicked
+      midBtn1.style.opacity = "100%";
+      midBtn1.style.border = "3px solid #2E588D";
+
+      // Update style of other button
+      midBtn2.style.opacity = "30%";
+      midBtn2.style.border = "";
+  
     });
 
     midBtn2.addEventListener("click", function () {
-      midBtn2.textContent = "Happiness: " + middayScenes[i].choices[1].happiness;
-      budget = budget - middayScenes[i].choices[1].cost;
-      happy = happy + middayScenes[i].choices[1].happiness;
-      updateHappinessBar();
+      // Update budget
+      budget = budget - middayActivity.choices[1].cost;
       document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
-      midBtn1.disabled = true;
-      midBtn2.disabled = true;
+
+      // Update happiness
+      userProgress.happiness = userProgress.happiness + middayActivity.choices[1].happiness;
+      updateHappinessBar();
+
+      // Update style of button clicked
+      midBtn2.style.opacity = "100%"
+      midBtn2.style.border = "3px solid #2E588D"
+
+      // Update style of other button
+      midBtn1.style.opacity = "30%"
+      midBtn1.style.border = ""
     });
 
-    // --- Night ---
-    const nightPrompt = document.getElementById("night");
-    nightPrompt.textContent = nightScenes[i].prompt;
-    nightBtn1.textContent = nightScenes[i].choices[0].text + ": $" + nightScenes[i].choices[0].cost;
-    nightBtn2.textContent = nightScenes[i].choices[1].text + ": $" + nightScenes[i].choices[1].cost;
+    // Randomly pick a night activity (repeats activity)
+    const nightActivityIndex = Math.floor(Math.random() * (nightScenes.length));
+    const nightActivity = nightScenes[nightActivityIndex];
+
+    // Populate Night Choices
+    const nightDecisionTag = document.getElementById("night");
+    nightDecisionTag.textContent = nightActivity.prompt;
+    
+    // First choice
+    const nightChoice1HeadingTag = document.getElementById("night-choice1-heading");
+    nightChoice1HeadingTag.textContent = nightActivity.choices[0].text;
+
+    const nightChoice1PriceTag = document.getElementById("night-choice1-price");
+    nightChoice1PriceTag.textContent = "$" + nightActivity.choices[0].cost;
+
+    const nightChoice1IconTag = document.getElementById("night-choice1-icon");
+    nightChoice1IconTag.src = nightActivity.choices[0].iconPath;
+
+    // Second choice
+    const nightChoice2HeadingTag = document.getElementById("night-choice2-heading")
+    nightChoice2HeadingTag.textContent = nightActivity.choices[1].text
+
+    const nightChoice2PriceTag = document.getElementById("night-choice2-price")
+    nightChoice2PriceTag.textContent = "$" + nightActivity.choices[1].cost
+
+    const nightChoice2Icon = document.getElementById("night-choice2-icon");
+    nightChoice2Icon.src = nightActivity.choices[1].iconPath;
 
     nightBtn1.addEventListener("click", function () {
-      nightBtn1.textContent = "Happiness: " + nightScenes[i].choices[0].happiness;
-      budget = budget - nightScenes[i].choices[0].cost;
-      happy = happy + nightScenes[i].choices[0].happiness;
-      updateHappinessBar();
+      // Update budget
+      budget = budget - nightActivity.choices[0].cost;
       document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
-      nightBtn1.disabled = true;
-      nightBtn2.disabled = true;
+
+      // Update happiness
+      userProgress.happiness = userProgress.happiness + nightActivity.choices[0].happiness;
+      updateHappinessBar();
+
+      // Update style of button clicked
+      nightBtn1.style.opacity = "100%";
+      nightBtn1.style.border = "3px solid #2E588D";
+
+      // Update style of other button
+      nightBtn2.style.opacity = "30%";
+      nightBtn2.style.border = "";
     });
 
     nightBtn2.addEventListener("click", function () {
-      nightBtn2.textContent = "Happiness: " + nightScenes[i].choices[1].happiness;
-      budget = budget - nightScenes[i].choices[1].cost;
-      happy = happy + nightScenes[i].choices[1].happiness;
-      updateHappinessBar();
+      // Update budget
+      budget = budget - nightActivity.choices[1].cost;
       document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
-      nightBtn1.disabled = true;
-      nightBtn2.disabled = true;
+
+      // Update happiness
+      userProgress.happiness = userProgress.happiness + nightActivity.choices[1].happiness;
+      updateHappinessBar();
+
+      // Update style of button clicked
+      nightBtn2.style.opacity = "100%"
+      nightBtn2.style.border = "3px solid #2E588D"
+
+      // Update style of other button
+      nightBtn1.style.opacity = "30%"
+      nightBtn1.style.border = ""
     });
   }else{
     console.log("done");
