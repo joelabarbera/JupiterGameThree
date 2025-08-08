@@ -184,7 +184,7 @@ body {
 
 .bar {
   height: 100%;
-  width: 40%;
+  width: 0%;
   background-color: #2E588D;
   transition: width 0.3s ease;
 }
@@ -259,3 +259,14 @@ img {
   left: 50%;
   transform: translateX(-50%);
 }
+
+.button-selected{
+  opacity: 1;
+  border: 3px solid #2E588D;
+}
+
+.button-not-selected{
+  opacity: 0.3;
+  border: none;
+}
+

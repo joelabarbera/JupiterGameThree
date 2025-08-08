@@ -159,30 +159,30 @@ function displayEnd(){
   endScreen.classList.remove("hide");
 
   let finHappy = document.getElementById("final-happy");
-  if (happy >= 40) {
+  if (userProgress.happiness >= 40) {
     message = "🌟 Zen Master: You stayed happy and balanced all week!";
-  } else if (happy >= 25) {
+  } else if (userProgress.happiness >= 25) {
     message = "😊 Chill & Balanced: You handled things pretty well.";
-  } else if (happy >= 10) {
+  } else if (userProgress.happiness >= 10) {
     message = "😐 Mildly Stressed: Some bumps, but you made it through.";
-  } else if (happy >= 0) {
+  } else if (userProgress.happiness >= 0) {
     message = "😬 Tense but Survived: That was a close one!";
   } else {
     message = "😢 Overwhelmed & Burnt Out: Time to reset and take care of yourself.";
   }
   finHappy.innerText = message;
-  document.getElementById("hScore").innerText = "Final Happiness: " + happy;
+  document.getElementById("hScore").innerText = "Final Happiness: " + userProgress.happiness;
   
   let finBudget = document.getElementById("final-budget");
-  if (budget >= 0){
-    finBudget.innerText = "Congrats you did not go over budget! Final Total: $" + budget;
+  if (userProgress.budget >= 0){
+    finBudget.innerText = "Congrats you did not go over budget! Final Total: $" + userProgress.budget;
     confetti({
       particleCount: 250,
       spread: 80,
       origin: { y: 0.6}
     })
   }else{
-    finBudget.innerText = "You failed. Budget: " +  budget.toFixed(2);
+    finBudget.innerText = "You failed. Budget: " +  userProgress.budget.toFixed(2);
   }
 }
 
@@ -196,20 +196,19 @@ function goToInstructionPage(){
 }
 
 const userProgress = {
-  happiness: 0
+  happiness: 0,
+  budget: 600
 }
 
 
 function updateHappinessBar() { 
   const bar = document.getElementById("bar");
-  const maxHappiness = 50;
-  const happiness = Math.max(0, Math.min(userProgress.happiness, maxHappiness));
-  const percent = (happiness / maxHappiness) * 100;
+  const percent = (userProgress.happiness / 15) * 100;
   bar.style.width = percent + "%";
-// changes color based on percentage level 
-  if (percent < 30) {
+  // changes color based on percentage level 
+  if (percent < 25) {
   bar.style.backgroundColor = "red";
-} else if (percent < 70) {
+} else if (percent < 65) {
   bar.style.backgroundColor = "orange";
 } else {
   bar.style.backgroundColor = "green";
@@ -239,8 +238,8 @@ function goToMainPage(event){
   const rentAmount = parseInt(document.getElementById('rent-amount').value);
   const investAmount = parseInt(document.getElementById('invest-amount').value);
   const emergencyAmount = parseInt(document.getElementById('emergency-amount').value);
-  budget = budget - investAmount.toFixed(2);
-  budget = budget - emergencyAmount.toFixed(2);
+  userProgress.budget = userProgress.budget - investAmount.toFixed(2);
+  userProgress.budget = userProgress.budget - emergencyAmount.toFixed(2);
 
 
   
@@ -283,7 +282,9 @@ rArrow.addEventListener("click", function () {
 
 let lArrow = document.getElementById('left-arrow');
 lArrow.addEventListener("click", function () {
-  if (i < 5){
+  if (i == 0){
+    i = i;
+  }else if (i > 0 && i < 5){
     i--;
     console.log(i);
     game(); 
@@ -292,15 +293,42 @@ lArrow.addEventListener("click", function () {
     goToInstructionPage();
   }
 }); 
+// 0 = no choices selected
+// 1 = left choice selected (btn1)
+// 2 = right choice selected (btn2)
 
-let budget = 600;
+/*
+  Pre: happiness: an integer from 0 to 1 (inclusive). It is the happiness of the activity that was selected.
+       cost: an integer >= 0. It is the cost of the activity that was selected.
+       otherHappiness: an integer from 0 to 1 (inclusive). It is the happiness of the activity that was not selected, in the same pair.
+       otherCost: an integer >= 0. It is the cost of the activity that was not selected
 
+*/
+function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected){
+  console.log(selected)
+  // If 1st time the user selects this activity, just update the happiness and budget of the selected activity
+  if (selected === 0){
+    userProgress.happiness = userProgress.happiness + happiness;
+    userProgress.budget = userProgress.budget - cost;
+  }
+  // If user is changing activity, subtract the happiness of the FROM activity and add the happiness of the TO activity
+  else{
+    userProgress.happiness = userProgress.happiness - otherHappiness;
+    userProgress.happiness = userProgress.happiness + happiness;
+
+    userProgress.budget = userProgress.budget + otherCost;
+    userProgress.budget = userProgress.budget - cost;
+  }
+  
+  updateHappinessBar();
+  document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget;
+}
 
 //Main Game
 function game(){
 
   resetChoiceButtons();
-  budgetElement.innerText = "Budget: $" + budget;
+  budgetElement.innerText = "Budget: $" + userProgress.budget;
 
   if (i <= 4){
 
@@ -363,41 +391,57 @@ function game(){
     const morningChoice2Icon = document.getElementById("morn-choice2-icon");
     morningChoice2Icon.src = morningActivity.choices[1].iconPath;
 
+    // 0 = no choices selected
+    // 1 = left choice selected (btn1)
+    // 2 = right choice selected (btn2)
+    let selected = 0;
+
     mornBtn1.onclick = function () {
-      // Update budget
-      budget = budget - morningActivity.choices[0].cost;
-      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
-
-      // Update happiness
-      userProgress.happiness = userProgress.happiness + morningActivity.choices[0].happiness;
-      updateHappinessBar();
-
+      // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
+      if (selected !== 1){
+        // Update happiness
+        updateUserProgress(morningActivity.choices[0].happiness, 
+                          morningActivity.choices[0].cost, 
+                          morningActivity.choices[1].happiness, 
+                          morningActivity.choices[1].cost, 
+                          selected)     
+      }
+       
+      selected = 1;
       // Update style of button clicked
-      mornBtn1.style.opacity = "100%";
-      mornBtn1.style.border = "3px solid #2E588D";
+      mornBtn1.classList.remove("button-not-selected");
+      mornBtn1.classList.add("button-selected");
+      
 
       // Update style of other button
-      mornBtn2.style.opacity = "30%";
-      mornBtn2.style.border = "";
+      mornBtn2.classList.remove("button-selected");
+      mornBtn2.classList.add("button-not-seleteced");
+
+
     };
 
-    mornBtn2.addEventListener("click", function () {
-      // Update budget
-      budget = budget - morningActivity.choices[1].cost;
-      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
-
-      // Update happiness
-      userProgress.happiness = userProgress.happiness + morningActivity.choices[1].happiness;
-      updateHappinessBar();
+    mornBtn2.onclick = function () {
+      if (selected !== 2){
+        // Update happiness
+        updateUserProgress(morningActivity.choices[1].happiness, 
+                           morningActivity.choices[1].cost, 
+                           morningActivity.choices[0].happiness, 
+                           morningActivity.choices[0].cost, 
+                           selected)
+      }
+      
+      selected = 2;
 
       // Update style of button clicked
-      mornBtn2.style.opacity = "100%"
-      mornBtn2.style.border = "3px solid #2E588D"
+      mornBtn2.classList.remove("button-not-selected");
+      mornBtn2.classList.add("button-selected");
 
       // Update style of other button
-      mornBtn1.style.opacity = "30%"
-      mornBtn1.style.border = ""
-    });
+      mornBtn1.classList.remove("button-selected");
+      mornBtn1.classList.add("button-not-seleteced");
+     
+
+    };
 
     // Randomly pick a midday activity (repeats activity)
     const middayActivityIndex = Math.floor(Math.random() * (middayScenes.length));
@@ -428,10 +472,12 @@ function game(){
     const middayChoice2Icon = document.getElementById("midday-choice2-icon");
     middayChoice2Icon.src = middayActivity.choices[1].iconPath;
 
-    midBtn1.addEventListener("click", function () {
+
+
+    midBtn1.onclick = function () {
       // Update budget
-      budget = budget - middayActivity.choices[0].cost;
-      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
+      userProgress.budget = userProgress.budget - middayActivity.choices[0].cost;
+      document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget.toFixed(2);
 
       // Update happiness
       userProgress.happiness = userProgress.happiness + middayActivity.choices[0].happiness;
@@ -444,13 +490,17 @@ function game(){
       // Update style of other button
       midBtn2.style.opacity = "30%";
       midBtn2.style.border = "";
-  
-    });
 
-    midBtn2.addEventListener("click", function () {
+      midBtn1.disabled = true;
+      midBtn2.disabled = true;
+
+  
+    };
+
+    midBtn2.onclick = function () {
       // Update budget
-      budget = budget - middayActivity.choices[1].cost;
-      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
+      userProgress.budget = userProgress.budget - middayActivity.choices[1].cost;
+      document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget.toFixed(2);
 
       // Update happiness
       userProgress.happiness = userProgress.happiness + middayActivity.choices[1].happiness;
@@ -463,7 +513,11 @@ function game(){
       // Update style of other button
       midBtn1.style.opacity = "30%"
       midBtn1.style.border = ""
-    });
+
+      midBtn1.disabled = true;
+      midBtn2.disabled = true;
+
+    };
 
     // Randomly pick a night activity (repeats activity)
     const nightActivityIndex = Math.floor(Math.random() * (nightScenes.length));
@@ -493,10 +547,10 @@ function game(){
     const nightChoice2Icon = document.getElementById("night-choice2-icon");
     nightChoice2Icon.src = nightActivity.choices[1].iconPath;
 
-    nightBtn1.addEventListener("click", function () {
+    nightBtn1.onclick = function () {
       // Update budget
-      budget = budget - nightActivity.choices[0].cost;
-      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
+      userProgress.budget = userProgress.budget - nightActivity.choices[0].cost;
+      document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget.toFixed(2);
 
       // Update happiness
       userProgress.happiness = userProgress.happiness + nightActivity.choices[0].happiness;
@@ -509,12 +563,16 @@ function game(){
       // Update style of other button
       nightBtn2.style.opacity = "30%";
       nightBtn2.style.border = "";
-    });
 
-    nightBtn2.addEventListener("click", function () {
+      nightBtn1.disabled = true;
+      nightBtn2.disabled = true;
+
+    };
+
+    nightBtn2.onclick = function () {
       // Update budget
-      budget = budget - nightActivity.choices[1].cost;
-      document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
+      userProgress.budget = userProgress.budget - nightActivity.choices[1].cost;
+      document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget.toFixed(2);
 
       // Update happiness
       userProgress.happiness = userProgress.happiness + nightActivity.choices[1].happiness;
@@ -527,11 +585,12 @@ function game(){
       // Update style of other button
       nightBtn1.style.opacity = "30%"
       nightBtn1.style.border = ""
-    }
-  );
+
+      nightBtn1.disabled = true;
+      nightBtn2.disabled = true;
+
+    };
   }else{
     console.log("done");
   }
 }
-
-
