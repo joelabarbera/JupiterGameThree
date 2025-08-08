@@ -293,16 +293,15 @@ lArrow.addEventListener("click", function () {
     goToInstructionPage();
   }
 }); 
-// 0 = no choices selected
-// 1 = left choice selected (btn1)
-// 2 = right choice selected (btn2)
 
 /*
   Pre: happiness: an integer from 0 to 1 (inclusive). It is the happiness of the activity that was selected.
        cost: an integer >= 0. It is the cost of the activity that was selected.
        otherHappiness: an integer from 0 to 1 (inclusive). It is the happiness of the activity that was not selected, in the same pair.
        otherCost: an integer >= 0. It is the cost of the activity that was not selected
-
+       selected: an integer from 0 to 2 (inclusive). It is used to determine if the user is selecting an activity from a pair for the 1st time.
+  
+  Post: updates userProgress object accordingly to the button clicked, 
 */
 function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected){
   console.log(selected)
@@ -356,12 +355,12 @@ function game(){
     const nightBtn2 = document.getElementById("night-choice2");
 
     // Re-enable buttons at the start of the scene
-    mornBtn1.disabled = false;
-    mornBtn2.disabled = false;
-    midBtn1.disabled = false;
-    midBtn2.disabled = false;
-    nightBtn1.disabled = false;
-    nightBtn2.disabled = false;
+    mornBtn1.classList.remove("button-selected");
+    mornBtn2.classList.remove("button-selected");
+    midBtn1.classList.remove("button-selected");
+    midBtn2.classList.remove("button-selected");
+    nightBtn1.classList.remove("button-selected");
+    nightBtn2.classList.remove("button-selected");
 
     // Randomly pick a morning activity (repeats activity)
     const morningActivityIndex = Math.floor(Math.random() * (morningScenes.length));
@@ -394,53 +393,38 @@ function game(){
     // 0 = no choices selected
     // 1 = left choice selected (btn1)
     // 2 = right choice selected (btn2)
-    let selected = 0;
+    let mornSelected = 0;
 
     mornBtn1.onclick = function () {
       // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
-      if (selected !== 1){
-        // Update happiness
+      if (mornSelected !== 1){
         updateUserProgress(morningActivity.choices[0].happiness, 
-                          morningActivity.choices[0].cost, 
-                          morningActivity.choices[1].happiness, 
-                          morningActivity.choices[1].cost, 
-                          selected)     
+                           morningActivity.choices[0].cost, 
+                           morningActivity.choices[1].happiness, 
+                           morningActivity.choices[1].cost, 
+                           mornSelected)     
       }
        
-      selected = 1;
-      // Update style of button clicked
-      mornBtn1.classList.remove("button-not-selected");
+      mornSelected = 1;
+    
       mornBtn1.classList.add("button-selected");
-      
-
-      // Update style of other button
       mornBtn2.classList.remove("button-selected");
-      mornBtn2.classList.add("button-not-seleteced");
-
-
     };
 
     mornBtn2.onclick = function () {
-      if (selected !== 2){
-        // Update happiness
+      // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
+      if (mornSelected !== 2){
         updateUserProgress(morningActivity.choices[1].happiness, 
                            morningActivity.choices[1].cost, 
                            morningActivity.choices[0].happiness, 
                            morningActivity.choices[0].cost, 
-                           selected)
+                           mornSelected)
       }
       
-      selected = 2;
-
-      // Update style of button clicked
-      mornBtn2.classList.remove("button-not-selected");
+      mornSelected = 2;
+  
       mornBtn2.classList.add("button-selected");
-
-      // Update style of other button
       mornBtn1.classList.remove("button-selected");
-      mornBtn1.classList.add("button-not-seleteced");
-     
-
     };
 
     // Randomly pick a midday activity (repeats activity)
@@ -472,51 +456,42 @@ function game(){
     const middayChoice2Icon = document.getElementById("midday-choice2-icon");
     middayChoice2Icon.src = middayActivity.choices[1].iconPath;
 
-
+    // 0 = no choices selected
+    // 1 = left choice selected (btn1)
+    // 2 = right choice selected (btn2)
+    let middaySelected = 0;
 
     midBtn1.onclick = function () {
-      // Update budget
-      userProgress.budget = userProgress.budget - middayActivity.choices[0].cost;
-      document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget.toFixed(2);
+      // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
+      if (middaySelected !== 1){
+        updateUserProgress(middayActivity.choices[0].happiness, 
+                           middayActivity.choices[0].cost, 
+                           middayActivity.choices[1].happiness, 
+                           middayActivity.choices[1].cost, 
+                           middaySelected)     
+      }
+       
+      middaySelected = 1;
 
-      // Update happiness
-      userProgress.happiness = userProgress.happiness + middayActivity.choices[0].happiness;
-      updateHappinessBar();
 
-      // Update style of button clicked
-      midBtn1.style.opacity = "100%";
-      midBtn1.style.border = "3px solid #2E588D";
-
-      // Update style of other button
-      midBtn2.style.opacity = "30%";
-      midBtn2.style.border = "";
-
-      midBtn1.disabled = true;
-      midBtn2.disabled = true;
-
-  
+      midBtn1.classList.add("button-selected");
+      midBtn2.classList.remove("button-selected");
     };
 
     midBtn2.onclick = function () {
-      // Update budget
-      userProgress.budget = userProgress.budget - middayActivity.choices[1].cost;
-      document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget.toFixed(2);
+      // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
+      if (middaySelected !== 2){
+        updateUserProgress(middayActivity.choices[1].happiness, 
+                           middayActivity.choices[1].cost, 
+                           middayActivity.choices[0].happiness, 
+                           middayActivity.choices[0].cost, 
+                           middaySelected)
+      }
+      
+      middaySelected = 2;
 
-      // Update happiness
-      userProgress.happiness = userProgress.happiness + middayActivity.choices[1].happiness;
-      updateHappinessBar();
-
-      // Update style of button clicked
-      midBtn2.style.opacity = "100%"
-      midBtn2.style.border = "3px solid #2E588D"
-
-      // Update style of other button
-      midBtn1.style.opacity = "30%"
-      midBtn1.style.border = ""
-
-      midBtn1.disabled = true;
-      midBtn2.disabled = true;
-
+      midBtn2.classList.add("button-selected");
+      midBtn1.classList.remove("button-selected");
     };
 
     // Randomly pick a night activity (repeats activity)
@@ -547,48 +522,41 @@ function game(){
     const nightChoice2Icon = document.getElementById("night-choice2-icon");
     nightChoice2Icon.src = nightActivity.choices[1].iconPath;
 
+    // 0 = no choices selected
+    // 1 = left choice selected (btn1)
+    // 2 = right choice selected (btn2)
+    let nightSelected = 0;
+
     nightBtn1.onclick = function () {
-      // Update budget
-      userProgress.budget = userProgress.budget - nightActivity.choices[0].cost;
-      document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget.toFixed(2);
+      // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
+      if (nightSelected !== 1){
+        updateUserProgress(nightActivity.choices[0].happiness, 
+                           nightActivity.choices[0].cost, 
+                           nightActivity.choices[1].happiness, 
+                           nightActivity.choices[1].cost, 
+                           nightSelected)     
+      }
+       
+      nightSelected = 1;
 
-      // Update happiness
-      userProgress.happiness = userProgress.happiness + nightActivity.choices[0].happiness;
-      updateHappinessBar();
-
-      // Update style of button clicked
-      nightBtn1.style.opacity = "100%";
-      nightBtn1.style.border = "3px solid #2E588D";
-
-      // Update style of other button
-      nightBtn2.style.opacity = "30%";
-      nightBtn2.style.border = "";
-
-      nightBtn1.disabled = true;
-      nightBtn2.disabled = true;
-
+      nightBtn1.classList.add("button-selected");
+      nightBtn2.classList.remove("button-selected");
     };
 
     nightBtn2.onclick = function () {
-      // Update budget
-      userProgress.budget = userProgress.budget - nightActivity.choices[1].cost;
-      document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget.toFixed(2);
+      // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
+      if (nightSelected !== 2){
+        updateUserProgress(nightActivity.choices[1].happiness, 
+                           nightActivity.choices[1].cost, 
+                           nightActivity.choices[0].happiness, 
+                           nightActivity.choices[0].cost, 
+                           nightSelected)
+      }
+      
+      nightSelected = 2;
 
-      // Update happiness
-      userProgress.happiness = userProgress.happiness + nightActivity.choices[1].happiness;
-      updateHappinessBar();
-
-      // Update style of button clicked
-      nightBtn2.style.opacity = "100%"
-      nightBtn2.style.border = "3px solid #2E588D"
-
-      // Update style of other button
-      nightBtn1.style.opacity = "30%"
-      nightBtn1.style.border = ""
-
-      nightBtn1.disabled = true;
-      nightBtn2.disabled = true;
-
+      nightBtn2.classList.add("button-selected");
+      nightBtn1.classList.remove("button-selected");
     };
   }else{
     console.log("done");

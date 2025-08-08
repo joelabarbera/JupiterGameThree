@@ -261,12 +261,8 @@ img {
 }
 
 .button-selected{
-  opacity: 1;
   border: 3px solid #2E588D;
 }
 
-.button-not-selected{
-  opacity: 0.3;
-  border: none;
-}
+
 
