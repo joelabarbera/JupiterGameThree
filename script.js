@@ -200,10 +200,35 @@ const userProgress = {
 }
 
 
-function updateHappinessBar(){
+function updateHappinessBar() { 
   const bar = document.getElementById("bar");
-  const percent = Math.max(0, Math.min(100, (userProgress.happiness/50)*100)); //0-100 happiness 
+  const maxHappiness = 50;
+  const happiness = Math.max(0, Math.min(userProgress.happiness, maxHappiness));
+  const percent = (happiness / maxHappiness) * 100;
   bar.style.width = percent + "%";
+// changes color based on percentage level 
+  if (percent < 30) {
+  bar.style.backgroundColor = "red";
+} else if (percent < 70) {
+  bar.style.backgroundColor = "orange";
+} else {
+  bar.style.backgroundColor = "green";
+}
+
+}
+
+function resetChoiceButtons() {
+  const buttons = [
+    "morn-choice1", "morn-choice2",
+    "mid-choice1", "mid-choice2",
+    "night-choice1", "night-choice2"
+  ];
+  buttons.forEach(id => {
+    const btn = document.getElementById(id);
+    btn.style.opacity = "100%";
+    btn.style.border = "";
+    btn.disabled = false;
+  });
 }
 
 // Main menu start bttn logic
@@ -263,6 +288,9 @@ lArrow.addEventListener("click", function () {
     console.log(i);
     game(); 
   }
+  else{
+    goToInstructionPage();
+  }
 }); 
 
 let budget = 600;
@@ -271,6 +299,7 @@ let budget = 600;
 //Main Game
 function game(){
 
+  resetChoiceButtons();
   budgetElement.innerText = "Budget: $" + budget;
 
   if (i <= 4){
@@ -334,7 +363,7 @@ function game(){
     const morningChoice2Icon = document.getElementById("morn-choice2-icon");
     morningChoice2Icon.src = morningActivity.choices[1].iconPath;
 
-    mornBtn1.addEventListener("click", function () {
+    mornBtn1.onclick = function () {
       // Update budget
       budget = budget - morningActivity.choices[0].cost;
       document.getElementById("budget-display").innerText = "Budget: $" + budget.toFixed(2);
@@ -350,7 +379,7 @@ function game(){
       // Update style of other button
       mornBtn2.style.opacity = "30%";
       mornBtn2.style.border = "";
-    });
+    };
 
     mornBtn2.addEventListener("click", function () {
       // Update budget
@@ -498,7 +527,8 @@ function game(){
       // Update style of other button
       nightBtn1.style.opacity = "30%"
       nightBtn1.style.border = ""
-    });
+    }
+  );
   }else{
     console.log("done");
   }
