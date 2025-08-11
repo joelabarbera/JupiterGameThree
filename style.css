@@ -105,6 +105,16 @@ body {
   background-image: url("https://www.myfili.com/wp-content/uploads/2025/08/welcome-image.png");
 }
 
+.how-to-play {
+  border: 2px solid #434242; /* Dark gray border */
+  padding: 1em;
+  border-radius: 10px;
+  background-color: rgba(250, 247, 247, 0.609); 
+  max-width: 80%;
+  margin: 1em auto;
+  list-style-position: inside; 
+}
+
 .main-page::before {
   background-image: url("images/clipboard.svg");
   background-color: #FAF8F5;
@@ -121,7 +131,7 @@ body {
   flex: 0 0 auto;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
   width: 100%;
   z-index: 5;
 }
@@ -165,7 +175,7 @@ body {
   flex: 1 1 45%;
   max-width: 140px;
   min-width: 100px;
-  padding: 10px;
+  padding: 10px 5px 5px 0px;
   background-color: #f7f7f7;
   border-radius: 10px;
   border: 1px solid lightgray;

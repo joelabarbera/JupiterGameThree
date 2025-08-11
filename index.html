@@ -18,26 +18,26 @@
         <div class="welcome-page" id="welcome-page">
             <h1>
                 <span >Welcome to <br></span>
-                <span style="color: rgb(9, 74, 194)"> <bold>Budget Simulator</bold>  </span>
+                <span style="color: rgb(9, 74, 194); font-size: 50px;"> <bold>Budget Simulator</bold>  </span>
 
             </h1>
-            <p style="text-align: center; font-size: 14px;">Knowing how to create a budget helps you stay out of debt,
-                <br> whether big and small.
-            </p>
+            
+           
             <button class="start-button" id="start-button">Start Game</button>
 
         </div>
 
         <div class="instruction-page hide" id="instruction-page">
-            <h2><i>How to Play</i></h2>
-            <p>You have <strong>$700</strong> to spend from Monday to Friday. Each day, make choices about how to
-                use your money. Each activity has a happiness score. Balance between budgeting and being happy.</p>
-            <p><strong>Goal:</strong> Spend your money wisely! <br>
-                To win, you must have spent all your money or have some
-                left over by the end of the week <strong>and</strong> have the happiness bar at least 50%.</p>
-            <p><strong>Watch out:</strong> If you end the week in debt, you lose the game.</p>
-
-
+            <div class="how-to-play">
+                <h2>How to Play</h2>
+                <p>You have <strong>$700</strong> to spend from Monday to Friday. Each day, make choices about how to
+                    use your money. Each activity has a happiness score. Balance between budgeting and being happy.</p>
+                <p><strong>Goal:</strong> Spend your money wisely! <br>
+                    To win, you must have spent all your money or have some
+                    left over by the end of the week <strong>and</strong> have the happiness bar at least 50%.</p>
+                <p><strong>Watch out:</strong> If you end the week in debt, you lose the game.</p>
+            </div>
+            
             <h3>Before you start your week, decide on the following activities <br>
                 (You cannot change them after you've started).</h3>
 
@@ -72,11 +72,10 @@
 
         <div class="main-page hide" id="main-page">
             <div class="nav">
-                <h2 id="week-day"></h2>
+                <h2 style="margin-top: 2vh" id="week-day"></h2>
             </div>
 
-            <div class="activites">
-                <div class="first-row">
+            <div class="first-row">
                     <div> Happiness Bar </div>
                     <div class="progress-bar">
                         <div class="bar" id="bar"></div>
@@ -84,6 +83,8 @@
                     <div class="week-day" id="week-day"></div>
                     <div class="budget" id="budget-display"></div>
                 </div>
+                
+            <div class="activites">
                 <div class="row">
                     <h2>Morning</h2>
                     <h3 id="morning"></h3>
