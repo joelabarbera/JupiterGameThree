@@ -2,7 +2,7 @@
 document.getElementById("start-button").addEventListener("click", goToInstructionPage); //start button on welcome page
 document.getElementById("my-bttn").addEventListener("click", goToMainPage); //start button on instructions pa
 document.getElementById("reload-btn").addEventListener("click", function () {
-window.location.reload();
+  window.location.reload();
 }); //reload button
 
 
@@ -28,14 +28,14 @@ const morningScenes = [
       { text: "Go to the gym", cost: 5, happiness: 1, iconPath: '/icons/gym.svg' }
     ]
   },
-  /*
   {
     prompt: "Sweet tooth strikes! What do you grab?",
     choices: [
-      { text: "Buy donut and juice", cost: 4, happiness: 1 },
-      { text: "Refill MetroCard instead", cost: 33, happiness: 1 }
+      { text: "Buy a donut", cost: 5, happiness: 1, iconPath: 'icons/donut.svg' },
+      { text: "Resist the urge", cost: 0, happiness: 0, iconPath: 'icons/no-donut.svg' }
     ]
   }
+  /*
   {
     prompt: "How to start the day:",
     choices: [
@@ -44,7 +44,7 @@ const morningScenes = [
     ]
   },
   */
-    
+
 ];
 
 const middayScenes = [
@@ -73,14 +73,21 @@ const middayScenes = [
     prompt: "A new hot video game just released. What do you do?",
     choices: [
       { text: "Buy it", cost: 50, happiness: 1, iconPath: 'icons/video-game.svg' },
-      { text: "Skip it", cost: 0, happiness: 0 , iconPath: 'icons/X.svg'}
+      { text: "Skip it", cost: 0, happiness: 0, iconPath: 'icons/X.svg' }
     ]
   },
   {
     prompt: "Feeling curious. Choose an activity:",
     choices: [
-      { text: "Visit the library", cost: 0, happiness: 0, iconPath: 'icons/library.svg' },
-      { text: "Go to a museum", cost: 10, happiness: 1, iconPath: 'icons/museum.svg'}
+      { text: "Visit the library", cost: 0, happiness: 1, iconPath: 'icons/library.svg' },
+      { text: "Go to a museum", cost: 10, happiness: 1, iconPath: 'icons/museum.svg' }
+    ]
+  },
+  {
+    prompt: "You see a new pet toy online. What do you do?",
+    choices: [
+      { text: "Buy it", cost: 0, happiness: 1, iconPath: 'icons/buy.svg' },
+      { text: "Don't buy it", cost: 10, happiness: 0, iconPath: 'icons/dont-buy.svg' }
     ]
   },
   /*
@@ -91,14 +98,7 @@ const middayScenes = [
       { text: "Borrow a friend’s charger", cost: 0, happiness: 0 }
     ]
   },
-  {
-    prompt: "🐶 Oh no, your pet is sick!",
-    choices: [
-      { text: "Pay $50 for vet care", cost: 50, happiness: -3 },
-      { text: "Hope it recovers naturally", cost: 0, happiness: -5 }
-    ]
-  }
-    */
+  */
 ];
 
 const nightScenes = [
@@ -106,7 +106,7 @@ const nightScenes = [
     prompt: "Your friends want to hang out. Choose an activity.",
     choices: [
       { text: "Go to the movies", cost: 25, happiness: 1, iconPath: 'icons/movie-theater.svg' },
-      { text: "Play video games", cost: 0, happiness: 0, iconPath: 'icons/video-game.svg'}
+      { text: "Play video games", cost: 0, happiness: 1, iconPath: 'icons/video-game.svg' }
     ]
   },
   {
@@ -117,20 +117,21 @@ const nightScenes = [
     ]
   },
   {
-    prompt: "Your feeling extra hungry. How do you get food?",
+    prompt: "You want a midnight meal. How do you get food?",
     choices: [
       { text: "Cook your own food", cost: 5, happiness: 0, iconPath: '/icons/cook-at-home.svg' },
       { text: "Order Food", cost: 20, happiness: 1, iconPath: '/icons/order-food.svg' }
     ]
   },
-  /*
+
   {
-    prompt: "🍕 It's dinner time. What do you eat?",
+    prompt: "It's dinner time. What do you eat?",
     choices: [
-      { text: "Order pizza", cost: 18, happiness: 3 },
-      { text: "Cook dinner at home", cost: 5, happiness: 1 }
+      { text: "Order pizza", cost: 18, happiness: 1, iconPath: '/icons/pizza.svg'  },
+      { text: "Cook dinner at home", cost: 5, happiness: 0, iconPath: '/icons/cook-at-home.svg' }
     ]
   },
+  /*
   {
     prompt: "🧘‍♀️ It's been a long day. Unwind how?",
     choices: [
@@ -145,14 +146,32 @@ const nightScenes = [
       { text: "Buy takeout dessert", cost: 7, happiness: 2 }
     ]
   }
-    */
+  */
 ];
 const budgetElement = document.getElementById("budget-display");
 
+// 0 = no choices selected
+// 1 = left choice selected (btn1)
+// 2 = right choice selected (btn2)
+let mornSelected = 0;
+let nightSelected = 0;
+let middaySelected = 0;
+
+//Checking if options are selected
+let mornChosen = false;
+let middayChosen = false;
+let nightChosen = false;
+
+//Event listeners for arrows
+let i = 0;
+
+let rArrow = document.getElementById('right-arrow');
+rArrow.disabled = true;
+
 //End Screen
-function displayEnd(){
+function displayEnd() {
   let message = "";
-  
+
   let game = document.getElementById("main-page");
   game.classList.add("hide");
   let endScreen = document.getElementById("end-screen");
@@ -172,21 +191,21 @@ function displayEnd(){
   }
   finHappy.innerText = message;
   document.getElementById("hScore").innerText = "Final Happiness: " + userProgress.happiness;
-  
+
   let finBudget = document.getElementById("final-budget");
-  if (userProgress.budget >= 0){
+  if (userProgress.budget >= 0) {
     finBudget.innerText = "Congrats you did not go over budget! Final Total: $" + userProgress.budget;
     confetti({
       particleCount: 250,
       spread: 80,
-      origin: { y: 0.6}
+      origin: { y: 0.6 }
     })
-  }else{
-    finBudget.innerText = "You failed. Budget: " +  userProgress.budget.toFixed(2);
+  } else {
+    finBudget.innerText = "You failed. Budget: " + userProgress.budget.toFixed(2);
   }
 }
 
-function goToInstructionPage(){
+function goToInstructionPage() {
 
   const welcomePageTag = document.getElementById("welcome-page");
   welcomePageTag.classList.add("hide");
@@ -197,22 +216,22 @@ function goToInstructionPage(){
 
 const userProgress = {
   happiness: 0,
-  budget: 600
+  budget: 800
 }
 
 
-function updateHappinessBar() { 
+function updateHappinessBar() {
   const bar = document.getElementById("bar");
   const percent = (userProgress.happiness / 15) * 100;
   bar.style.width = percent + "%";
   // changes color based on percentage level 
   if (percent < 25) {
-  bar.style.backgroundColor = "red";
-} else if (percent < 65) {
-  bar.style.backgroundColor = "orange";
-} else {
-  bar.style.backgroundColor = "green";
-}
+    bar.style.backgroundColor = "red";
+  } else if (percent < 65) {
+    bar.style.backgroundColor = "orange";
+  } else {
+    bar.style.backgroundColor = "green";
+  }
 
 }
 
@@ -231,7 +250,7 @@ function resetChoiceButtons() {
 }
 
 // Main menu start bttn logic
-function goToMainPage(event){
+function goToMainPage(event) {
   event.preventDefault();
 
   // Validate the inputs to make sure their sum is less than $700
@@ -242,8 +261,8 @@ function goToMainPage(event){
   userProgress.budget = userProgress.budget - emergencyAmount.toFixed(2);
 
 
+
   
-  /*
   if (rentAmount + investAmount + emergencyAmount > 700){
     alert("You have exceeded the budget. Please try again");
   }
@@ -251,48 +270,46 @@ function goToMainPage(event){
     alert("You are missing an input. Put 0 if you don't want to put any money into it.")
   }
   else{
-    */
-  
-    const instructionPageTag = document.getElementById("instruction-page");
-    instructionPageTag.classList.add("hide");
 
-    const mainPageTag = document.getElementById("main-page");
-    mainPageTag.classList.remove("hide");
-    
-    game();
-    console.log("test");
-    
-  //}
+
+  const instructionPageTag = document.getElementById("instruction-page");
+  instructionPageTag.classList.add("hide");
+
+  const mainPageTag = document.getElementById("main-page");
+  mainPageTag.classList.remove("hide");
+
+  game();
+  console.log("test");
+
+  }
 
 }
 
-//Event listeners for arrows
-let i = 0;
-
-let rArrow = document.getElementById('right-arrow');
 rArrow.addEventListener("click", function () {
-  if (i < 4){
+  if (i < 4) {
     i++;
     console.log(i);
-    game(); 
-  }else{
+    game();
+  } else {
     displayEnd();
   }
-}); 
 
-let lArrow = document.getElementById('left-arrow');
-lArrow.addEventListener("click", function () {
-  if (i == 0){
-    i = i;
-  }else if (i > 0 && i < 5){
-    i--;
-    console.log(i);
-    game(); 
+
+});
+
+
+function checkNext() {
+  if(mornChosen && middayChosen && nightChosen)
+  {
+    rArrow.disabled = false;
   }
-  else{
-    goToInstructionPage();
+  else
+  {
+    rArrow.disabled = true;
   }
-}); 
+}
+
+
 
 /*
   Pre: happiness: an integer from 0 to 1 (inclusive). It is the happiness of the activity that was selected.
@@ -301,35 +318,64 @@ lArrow.addEventListener("click", function () {
        otherCost: an integer >= 0. It is the cost of the activity that was not selected
        selected: an integer from 0 to 2 (inclusive). It is used to determine if the user is selecting an activity from a pair for the 1st time.
   
-  Post: updates userProgress object accordingly to the button clicked, 
+  Post: updates userProgress object accordingly to the button clicked,
 */
-function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected){
-  console.log(selected)
-  // If 1st time the user selects this activity, just update the happiness and budget of the selected activity
-  if (selected === 0){
-    userProgress.happiness = userProgress.happiness + happiness;
-    userProgress.budget = userProgress.budget - cost;
-  }
-  // If user is changing activity, subtract the happiness of the FROM activity and add the happiness of the TO activity
-  else{
-    userProgress.happiness = userProgress.happiness - otherHappiness;
-    userProgress.happiness = userProgress.happiness + happiness;
 
-    userProgress.budget = userProgress.budget + otherCost;
-    userProgress.budget = userProgress.budget - cost;
+function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected) {
+  // Emergency event: try to pay $50 from emergency fund, remainder from budget
+  if (selected === 'emergency') {
+    const emergencyInput = document.getElementById('emergency-amount');
+    let emergency = Number(emergencyInput?.value) || 0;
+    const vetCost = 50;
+
+    if (emergency >= vetCost) {
+      emergency -= vetCost;
+    } else {
+      const remainder = vetCost - emergency;
+      emergency = 0;
+      userProgress.budget -= remainder;
+    }
+
+    
+    emergencyInput.value = emergency.toFixed(2)
+    document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget;
+    updateHappinessBar();
+    return; 
   }
-  
+
+  // Button
+  if (selected === 0) {
+    userProgress.happiness += happiness;
+    userProgress.budget -= cost;
+  } else {
+    userProgress.happiness -= otherHappiness;
+    userProgress.happiness += happiness;
+
+    userProgress.budget += otherCost;
+    userProgress.budget -= cost;
+  }
+
   updateHappinessBar();
   document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget;
 }
 
 //Main Game
-function game(){
+function game() {
 
   resetChoiceButtons();
+  mornChosen = false;
+  middayChosen = false;
+  nightChosen = false;
+
+  mornSelected = 0;
+  nightSelected = 0;
+  middaySelected = 0;
+
+  rArrow.disabled = true;
+
   budgetElement.innerText = "Budget: $" + userProgress.budget;
 
-  if (i <= 4){
+  if (i <= 4) {
 
     let day = document.getElementById("week-day");
     if (i === 0) {
@@ -338,6 +384,8 @@ function game(){
       day.innerText = "Tuesday";
     } else if (i === 2) {
       day.innerText = "Wednesday";
+      alert("🐱💊 Uh-oh! Your furry friend got sick, and the vet visit cost you $50");
+      updateUserProgress(0, 0, 0, 0, 'emergency');
     } else if (i === 3) {
       day.innerText = "Thursday";
     } else if (i === 4) {
@@ -369,7 +417,7 @@ function game(){
     // Populate Morning Choices
     const morningDecisionTag = document.getElementById("morning");
     morningDecisionTag.textContent = morningActivity.prompt;
-    
+
     // First choice
     const morningChoice1HeadingTag = document.getElementById("morn-choice1-heading");
     morningChoice1HeadingTag.textContent = morningActivity.choices[0].text;
@@ -379,7 +427,7 @@ function game(){
 
     const morningChoice1IconTag = document.getElementById("morn-choice1-icon");
     morningChoice1IconTag.src = morningActivity.choices[0].iconPath;
-    
+
     // Second choice
     const morningChoice2HeadingTag = document.getElementById("morn-choice2-heading")
     morningChoice2HeadingTag.textContent = morningActivity.choices[1].text
@@ -390,39 +438,38 @@ function game(){
     const morningChoice2Icon = document.getElementById("morn-choice2-icon");
     morningChoice2Icon.src = morningActivity.choices[1].iconPath;
 
-    // 0 = no choices selected
-    // 1 = left choice selected (btn1)
-    // 2 = right choice selected (btn2)
-    let mornSelected = 0;
-
     mornBtn1.onclick = function () {
       // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
-      if (mornSelected !== 1){
-        updateUserProgress(morningActivity.choices[0].happiness, 
-                           morningActivity.choices[0].cost, 
-                           morningActivity.choices[1].happiness, 
-                           morningActivity.choices[1].cost, 
-                           mornSelected)     
+      if (mornSelected !== 1) {
+        updateUserProgress(morningActivity.choices[0].happiness,
+          morningActivity.choices[0].cost,
+          morningActivity.choices[1].happiness,
+          morningActivity.choices[1].cost,
+          mornSelected)
       }
-       
+
       mornSelected = 1;
-    
+      mornChosen = true;
+      checkNext();
+
       mornBtn1.classList.add("button-selected");
       mornBtn2.classList.remove("button-selected");
     };
 
     mornBtn2.onclick = function () {
       // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
-      if (mornSelected !== 2){
-        updateUserProgress(morningActivity.choices[1].happiness, 
-                           morningActivity.choices[1].cost, 
-                           morningActivity.choices[0].happiness, 
-                           morningActivity.choices[0].cost, 
-                           mornSelected)
+      if (mornSelected !== 2) {
+        updateUserProgress(morningActivity.choices[1].happiness,
+          morningActivity.choices[1].cost,
+          morningActivity.choices[0].happiness,
+          morningActivity.choices[0].cost,
+          mornSelected)
       }
-      
+
       mornSelected = 2;
-  
+      mornChosen = true;
+      checkNext();
+
       mornBtn2.classList.add("button-selected");
       mornBtn1.classList.remove("button-selected");
     };
@@ -434,7 +481,7 @@ function game(){
     // Populate Midday Choices
     const middayDecisionTag = document.getElementById("midday");
     middayDecisionTag.textContent = middayActivity.prompt;
-    
+
     // First choice
     const middayChoice1HeadingTag = document.getElementById("midday-choice1-heading");
     middayChoice1HeadingTag.textContent = middayActivity.choices[0].text;
@@ -445,7 +492,7 @@ function game(){
     const middayChoice1IconTag = document.getElementById("midday-choice1-icon");
     middayChoice1IconTag.src = middayActivity.choices[0].iconPath;
 
-    
+
     // Second choice
     const middayChoice2HeadingTag = document.getElementById("midday-choice2-heading")
     middayChoice2HeadingTag.textContent = middayActivity.choices[1].text
@@ -456,22 +503,20 @@ function game(){
     const middayChoice2Icon = document.getElementById("midday-choice2-icon");
     middayChoice2Icon.src = middayActivity.choices[1].iconPath;
 
-    // 0 = no choices selected
-    // 1 = left choice selected (btn1)
-    // 2 = right choice selected (btn2)
-    let middaySelected = 0;
 
     midBtn1.onclick = function () {
       // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
-      if (middaySelected !== 1){
-        updateUserProgress(middayActivity.choices[0].happiness, 
-                           middayActivity.choices[0].cost, 
-                           middayActivity.choices[1].happiness, 
-                           middayActivity.choices[1].cost, 
-                           middaySelected)     
+      if (middaySelected !== 1) {
+        updateUserProgress(middayActivity.choices[0].happiness,
+          middayActivity.choices[0].cost,
+          middayActivity.choices[1].happiness,
+          middayActivity.choices[1].cost,
+          middaySelected)
       }
-       
+
       middaySelected = 1;
+      middayChosen = true;
+      checkNext();
 
 
       midBtn1.classList.add("button-selected");
@@ -480,15 +525,17 @@ function game(){
 
     midBtn2.onclick = function () {
       // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
-      if (middaySelected !== 2){
-        updateUserProgress(middayActivity.choices[1].happiness, 
-                           middayActivity.choices[1].cost, 
-                           middayActivity.choices[0].happiness, 
-                           middayActivity.choices[0].cost, 
-                           middaySelected)
+      if (middaySelected !== 2) {
+        updateUserProgress(middayActivity.choices[1].happiness,
+          middayActivity.choices[1].cost,
+          middayActivity.choices[0].happiness,
+          middayActivity.choices[0].cost,
+          middaySelected)
       }
-      
+
       middaySelected = 2;
+      middayChosen = true;
+      checkNext();
 
       midBtn2.classList.add("button-selected");
       midBtn1.classList.remove("button-selected");
@@ -501,7 +548,7 @@ function game(){
     // Populate Night Choices
     const nightDecisionTag = document.getElementById("night");
     nightDecisionTag.textContent = nightActivity.prompt;
-    
+
     // First choice
     const nightChoice1HeadingTag = document.getElementById("night-choice1-heading");
     nightChoice1HeadingTag.textContent = nightActivity.choices[0].text;
@@ -522,22 +569,19 @@ function game(){
     const nightChoice2Icon = document.getElementById("night-choice2-icon");
     nightChoice2Icon.src = nightActivity.choices[1].iconPath;
 
-    // 0 = no choices selected
-    // 1 = left choice selected (btn1)
-    // 2 = right choice selected (btn2)
-    let nightSelected = 0;
-
     nightBtn1.onclick = function () {
       // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
-      if (nightSelected !== 1){
-        updateUserProgress(nightActivity.choices[0].happiness, 
-                           nightActivity.choices[0].cost, 
-                           nightActivity.choices[1].happiness, 
-                           nightActivity.choices[1].cost, 
-                           nightSelected)     
+      if (nightSelected !== 1) {
+        updateUserProgress(nightActivity.choices[0].happiness,
+          nightActivity.choices[0].cost,
+          nightActivity.choices[1].happiness,
+          nightActivity.choices[1].cost,
+          nightSelected)
       }
-       
+
       nightSelected = 1;
+      nightChosen = true;
+      checkNext();
 
       nightBtn1.classList.add("button-selected");
       nightBtn2.classList.remove("button-selected");
@@ -545,20 +589,22 @@ function game(){
 
     nightBtn2.onclick = function () {
       // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
-      if (nightSelected !== 2){
-        updateUserProgress(nightActivity.choices[1].happiness, 
-                           nightActivity.choices[1].cost, 
-                           nightActivity.choices[0].happiness, 
-                           nightActivity.choices[0].cost, 
-                           nightSelected)
+      if (nightSelected !== 2) {
+        updateUserProgress(nightActivity.choices[1].happiness,
+          nightActivity.choices[1].cost,
+          nightActivity.choices[0].happiness,
+          nightActivity.choices[0].cost,
+          nightSelected)
       }
-      
-      nightSelected = 2;
 
+      nightSelected = 2;
+      nightChosen = true;
+      checkNext();
+      
       nightBtn2.classList.add("button-selected");
       nightBtn1.classList.remove("button-selected");
     };
-  }else{
+  } else {
     console.log("done");
   }
 }
