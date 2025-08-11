@@ -216,6 +216,9 @@ function goToInstructionPage() {
 
 const userProgress = {
   happiness: 0,
+  invest: -1,
+  emergency: -1,
+  rent: 500,
   budget: 800
 }
 
@@ -257,10 +260,6 @@ function goToMainPage(event) {
   const rentAmount = parseInt(document.getElementById('rent-amount').value);
   const investAmount = parseInt(document.getElementById('invest-amount').value);
   const emergencyAmount = parseInt(document.getElementById('emergency-amount').value);
-  userProgress.budget = userProgress.budget - investAmount.toFixed(2);
-  userProgress.budget = userProgress.budget - emergencyAmount.toFixed(2);
-
-
 
   
   if (rentAmount + investAmount + emergencyAmount > 700){
@@ -270,6 +269,12 @@ function goToMainPage(event) {
     alert("You are missing an input. Put 0 if you don't want to put any money into it.")
   }
   else{
+    userProgress.emergency = emergencyAmount;
+    userProgress.invest = investAmount;
+
+    console.log(userProgress.budget, emergencyAmount, investAmount ,userProgress.rent)
+    userProgress.budget = userProgress.budget - emergencyAmount - investAmount - userProgress.rent;
+
 
 
   const instructionPageTag = document.getElementById("instruction-page");
@@ -316,14 +321,26 @@ function checkNext() {
        cost: an integer >= 0. It is the cost of the activity that was selected.
        otherHappiness: an integer from 0 to 1 (inclusive). It is the happiness of the activity that was not selected, in the same pair.
        otherCost: an integer >= 0. It is the cost of the activity that was not selected
-       selected: an integer from 0 to 2 (inclusive). It is used to determine if the user is selecting an activity from a pair for the 1st time.
+       selected: an integer from -1 to 2 (inclusive). It is used to determine if the user is selecting an activity from a pair for the 1st time. -1 represented an emergency event
   
   Post: updates userProgress object accordingly to the button clicked,
 */
 
 function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected) {
   // Emergency event: try to pay $50 from emergency fund, remainder from budget
-  if (selected === 'emergency') {
+  if (selected === -1) {
+    const remainder = userProgress.emergency - 50;
+
+    if (userProgress.emergency >= 50)[
+      userProgress.emergency = remainder
+    ]
+    else{
+      userProgress.emergency = 0
+      userProgress.budget = userProgress.budget + remainder
+      document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget;
+    }
+    return;
+    /*
     const emergencyInput = document.getElementById('emergency-amount');
     let emergency = Number(emergencyInput?.value) || 0;
     const vetCost = 50;
@@ -341,6 +358,7 @@ function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected
     document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget;
     updateHappinessBar();
     return; 
+    */
   }
 
   // Button
@@ -384,8 +402,20 @@ function game() {
       day.innerText = "Tuesday";
     } else if (i === 2) {
       day.innerText = "Wednesday";
-      alert("🐱💊 Uh-oh! Your furry friend got sick, and the vet visit cost you $50");
-      updateUserProgress(0, 0, 0, 0, 'emergency');
+      console.log(userProgress.emergency)
+      if (userProgress.emergency === 0 || userProgress.emergency === undefined){
+        alert("❗Emergency!❗ \n" +
+            "Your pet got sick, and the vet visit cost you $50 \n" + 
+            "Since you don't have any money saved for an emergency, $50 will be deducted from your budget.");
+      }
+      else{
+        alert("❗Emergency!❗ \n" +
+            "Your pet got sick, and the vet visit cost you $50 \n" + 
+            "Since you saved money for an emergency, $50 will be deducted there and any leftovers will be deducted from your budget");        
+      }
+      
+      updateUserProgress(0, 0, 0, 0, -1);
+       
     } else if (i === 3) {
       day.innerText = "Thursday";
     } else if (i === 4) {
