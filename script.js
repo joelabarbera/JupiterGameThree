@@ -1,12 +1,49 @@
 'use strict'
-document.getElementById("start-button").addEventListener("click", goToInstructionPage); //start button on welcome page
-document.getElementById("my-bttn").addEventListener("click", goToMainPage); //start button on instructions pa
-document.getElementById("reload-btn").addEventListener("click", function () {
-  window.location.reload();
-}); //reload button
-
+// The following object is used to track the user's progress throughout the game
+const userProgress = {
+  happiness: 0,
+  invest: -1,
+  emergency: -1,
+  rent: 500,
+  budget: 800
+}
 
 const morningScenes = [
+  {
+    prompt: "You overslept and need breakfast fast.",
+    choices: [
+      { text: "Grab a bagel on the way", cost: 4, happiness: 1, iconPath: '/icons/order-food.svg' },
+      { text: "Skip breakfast", cost: 0, happiness: -1, iconPath: '/icons/no-donut.svg' }
+    ]
+  },
+  {
+    prompt: "It’s a sunny morning—what’s your start?",
+    choices: [
+      { text: "Go for a jog", cost: 0, happiness: 2, iconPath: '/icons/jog.svg' },
+      { text: "Sleep in a little more", cost: 0, happiness: 1, iconPath: '/icons/gym.svg' }
+    ]
+  },
+  {
+    prompt: "You need caffeine but you’re low on time.",
+    choices: [
+      { text: "Quick drive to Starbucks", cost: 6, happiness: 1, iconPath: '/icons/starbucks.svg' },
+      { text: "Brew coffee at home", cost: 1, happiness: 1, iconPath: '/icons/coffee-machine.svg' }
+    ]
+  },
+  {
+    prompt: "You’re hungry but also in a rush.",
+    choices: [
+      { text: "Order breakfast sandwich", cost: 7, happiness: 1, iconPath: '/icons/order-food.svg' },
+      { text: "Make toast at home", cost: 2, happiness: 0, iconPath: '/icons/cook-at-home.svg' }
+    ]
+  },
+  {
+    prompt: "You want to move your body.",
+    choices: [
+      { text: "Gym session", cost: 5, happiness: 2, iconPath: '/icons/gym.svg' },
+      { text: "Home workout", cost: 0, happiness: 1, iconPath: '/icons/jog.svg' }
+    ]
+  },
   {
     prompt: "Breakfast time! Pick your fuel:",
     choices: [
@@ -131,6 +168,35 @@ const nightScenes = [
       { text: "Cook dinner at home", cost: 5, happiness: 0, iconPath: '/icons/cook-at-home.svg' }
     ]
   },
+  {
+    prompt: "You’re craving something sweet before bed.",
+    choices: [
+      { text: "Bake something simple", cost: 6, happiness: 1, iconPath: '/icons/cook-at-home.svg' },
+      { text: "Order dessert delivery", cost: 14, happiness: 2, iconPath: '/icons/order-food.svg' }
+    ]
+  },
+  {
+    prompt: "There’s a local band playing downtown.",
+    choices: [
+      { text: "Go check it out", cost: 25, happiness: 2, iconPath: 'icons/concert.svg' },
+      { text: "Stream music at home", cost: 0, happiness: 0, iconPath: 'icons/tv.svg' }
+    ]
+  },
+  {
+    prompt: "You’ve got an early morning tomorrow.",
+    choices: [
+      { text: "Wind down with a show and sleep early", cost: 0, happiness: 1, iconPath: 'icons/tv.svg' },
+      { text: "Gaming session with friends", cost: 0, happiness: 2, iconPath: 'icons/video-game.svg' }
+    ]
+  },
+  {
+    prompt: "Roommates suggest a pizza split.",
+    choices: [
+      { text: "Join in and split a pie", cost: 9, happiness: 2, iconPath: '/icons/pizza.svg' },
+      { text: "Make a quick dinner at home", cost: 4, happiness: 1, iconPath: '/icons/cook-at-home.svg' }
+    ]
+  }
+
   /*
   {
     prompt: "🧘‍♀️ It's been a long day. Unwind how?",
@@ -148,62 +214,46 @@ const nightScenes = [
   }
   */
 ];
+
+
+/*
+  The variable day is used to keep track of the day that the user is on
+  0 = Monday
+  1 = Tuesday
+  2 = Wednesday
+  3 = Thursday
+  4 = Friday
+*/
+let day = 0;
+const dayTag = document.getElementById("week-day");
+
+/*
+  The following 3 variables are used to track the buttons that the user has selected. It is user for:
+  1) Updating the happiness & budget if the user has changed activity of the same pair.
+  2) Enabling the next button after user has selected a activity for all 3 parts of a day
+
+  0 = no choices selected
+  1 = left choice selected (btn1)
+  2 = right choice selected (btn2)
+*/
+let mornSelected = 0, middaySelected = 0, nightSelected = 0;
+
+
+/*
+  The following 6 buttons are used for event listeners
+  Variables labeled 1 represents the left button
+  Variables labeled 2 represents the right button
+*/
+const mornBtn1 = document.getElementById("morn-choice1");
+const mornBtn2 = document.getElementById("morn-choice2");
+const midBtn1 = document.getElementById("mid-choice1");
+const midBtn2 = document.getElementById("mid-choice2");
+const nightBtn1 = document.getElementById("night-choice1");
+const nightBtn2 = document.getElementById("night-choice2");
+
+const rArrow = document.getElementById('right-arrow');
 const budgetElement = document.getElementById("budget-display");
 
-// 0 = no choices selected
-// 1 = left choice selected (btn1)
-// 2 = right choice selected (btn2)
-let mornSelected = 0;
-let nightSelected = 0;
-let middaySelected = 0;
-
-//Checking if options are selected
-let mornChosen = false;
-let middayChosen = false;
-let nightChosen = false;
-
-//Event listeners for arrows
-let i = 0;
-
-let rArrow = document.getElementById('right-arrow');
-rArrow.disabled = true;
-
-//End Screen
-function displayEnd() {
-  let message = "";
-
-  let game = document.getElementById("main-page");
-  game.classList.add("hide");
-  let endScreen = document.getElementById("end-screen");
-  endScreen.classList.remove("hide");
-
-  let finHappy = document.getElementById("final-happy");
-  if (userProgress.happiness >= 40) {
-    message = "🌟 Zen Master: You stayed happy and balanced all week!";
-  } else if (userProgress.happiness >= 25) {
-    message = "😊 Chill & Balanced: You handled things pretty well.";
-  } else if (userProgress.happiness >= 10) {
-    message = "😐 Mildly Stressed: Some bumps, but you made it through.";
-  } else if (userProgress.happiness >= 0) {
-    message = "😬 Tense but Survived: That was a close one!";
-  } else {
-    message = "😢 Overwhelmed & Burnt Out: Time to reset and take care of yourself.";
-  }
-  finHappy.innerText = message;
-  document.getElementById("hScore").innerText = "Final Happiness: " + userProgress.happiness;
-
-  let finBudget = document.getElementById("final-budget");
-  if (userProgress.budget >= 0) {
-    finBudget.innerText = "Congrats you did not go over budget! Final Total: $" + userProgress.budget;
-    confetti({
-      particleCount: 250,
-      spread: 80,
-      origin: { y: 0.6 }
-    })
-  } else {
-    finBudget.innerText = "You failed. Budget: " + userProgress.budget.toFixed(2);
-  }
-}
 
 function goToInstructionPage() {
 
@@ -214,45 +264,6 @@ function goToInstructionPage() {
   instructionPageTag.classList.remove("hide");
 }
 
-const userProgress = {
-  happiness: 0,
-  invest: -1,
-  emergency: -1,
-  rent: 500,
-  budget: 800
-}
-
-
-function updateHappinessBar() {
-  const bar = document.getElementById("bar");
-  const percent = (userProgress.happiness / 15) * 100;
-  bar.style.width = percent + "%";
-  // changes color based on percentage level 
-  if (percent < 25) {
-    bar.style.backgroundColor = "red";
-  } else if (percent < 65) {
-    bar.style.backgroundColor = "orange";
-  } else {
-    bar.style.backgroundColor = "green";
-  }
-
-}
-
-function resetChoiceButtons() {
-  const buttons = [
-    "morn-choice1", "morn-choice2",
-    "mid-choice1", "mid-choice2",
-    "night-choice1", "night-choice2"
-  ];
-  buttons.forEach(id => {
-    const btn = document.getElementById(id);
-    btn.style.opacity = "100%";
-    btn.style.border = "";
-    btn.disabled = false;
-  });
-}
-
-// Main menu start bttn logic
 function goToMainPage(event) {
   event.preventDefault();
 
@@ -290,40 +301,117 @@ function goToMainPage(event) {
 
 }
 
-rArrow.addEventListener("click", function () {
-  if (i < 4) {
-    i++;
-    console.log(i);
-    game();
-  } else {
-    displayEnd();
+function goToEndPage() {
+  let message = "";
+
+  let game = document.getElementById("main-page");
+  game.classList.add("hide");
+  let endScreen = document.getElementById("end-screen");
+  endScreen.classList.remove("hide");
+
+  const finalImageS = document.getElementById("final-img");
+  
+  const winSound = document.getElementById("lesson-complete-sound");
+  const loseSound = document.getElementById("lose-sound");
+
+  if(winSound)
+  {
+    winSound.volume = 0.2;
+  }
+  if(loseSound)
+  {
+    loseSound.volume = 0.2;
   }
 
+  let finHappy = document.getElementById("final-happy");
+  if (userProgress.happiness >= 40) {
+    message = "🌟 Zen Master: You stayed happy and balanced all week!";
+  } else if (userProgress.happiness >= 25) {
+    message = "😊 Chill & Balanced: You handled things pretty well.";
+  } else if (userProgress.happiness >= 10) {
+    message = "😐 Mildly Stressed: Some bumps, but you made it through.";
+  } else if (userProgress.happiness >= 0) {
+    message = "😬 Tense but Survived: That was a close one!";
+  } else {
+    message = "😢 Overwhelmed & Burnt Out: Time to reset and take care of yourself.";
+  }
+  finHappy.innerText = message;
+  document.getElementById("happiness-score").textContent = "Final Happiness: " + userProgress.happiness;
 
-});
+  let finBudget = document.getElementById("final-budget");
+  if (userProgress.budget >= 0) {
+    finBudget.innerText = "Congrats you did not go over budget! Final Total: $" + userProgress.budget;
+    confetti({
+      particleCount: 250,
+      spread: 80,
+      origin: { y: 0.6 }
+    })
+    winSound.play();
+  } else {
+    finBudget.innerText = "You failed. Budget: " + userProgress.budget.toFixed(2);
+    loseSound.play();
+  }
 
-
-function checkNext() {
-  if(mornChosen && middayChosen && nightChosen)
+  //Determining which image to display at the end
+  let happinessPercent = (userProgress.happiness / 15) * 100;
+  let imgChosen = "";
+  if(userProgress.budget <= 0 && userProgress.happinessPercent <= 50)
   {
-    rArrow.disabled = false;
+    imgChosen = "https://www.myfili.com/wp-content/uploads/2025/08/poor-unhappy.png";
+  }
+  else if(userProgress.budget >= 0 && userProgress.happinessPercent <= 50)
+  {
+    imgChosen = "https://www.myfili.com/wp-content/uploads/2025/08/rich-unhappy.png";
+  }
+  else if(userProgress.budget <= 0 && userProgress.happinessPercent >= 50)
+  {
+    imgChosen = "https://www.myfili.com/wp-content/uploads/2025/08/poor-happy.png";
   }
   else
   {
-    rArrow.disabled = true;
+    imgChosen = "https://www.myfili.com/wp-content/uploads/2025/08/rich-happy.png";
   }
+
+  finalImageS.src = imgChosen;
 }
 
+function updateHappinessBar() {
+  const bar = document.getElementById("bar");
+  const percent = (userProgress.happiness / 15) * 100;
+
+  bar.style.width = percent + "%";
+  // changes color based on percentage level 
+  bar.style.background = percent < 50 ? "red" : "green"
+}
+
+// This function resets the style, makes the buttons clickable, and is used when user goes to next day
+function resetChoiceButtons() {
+  const buttons = ["morn-choice1", "morn-choice2",
+                   "mid-choice1", "mid-choice2",
+                   "night-choice1", "night-choice2"];
+
+  buttons.forEach(id => {
+    const btn = document.getElementById(id);
+    btn.style.opacity = "100%";
+    btn.style.border = "";
+    btn.disabled = false;
+    btn.classList.remove("button-selected");
+  });
+}
+
+function checkNext(){
+  rArrow.disabled = !(mornSelected !== 0 && middaySelected !== 0 && nightSelected !== 0)
+}
 
 
 /*
   Pre: happiness: an integer from 0 to 1 (inclusive). It is the happiness of the activity that was selected.
        cost: an integer >= 0. It is the cost of the activity that was selected.
        otherHappiness: an integer from 0 to 1 (inclusive). It is the happiness of the activity that was not selected, in the same pair.
-       otherCost: an integer >= 0. It is the cost of the activity that was not selected
-       selected: an integer from -1 to 2 (inclusive). It is used to determine if the user is selecting an activity from a pair for the 1st time. -1 represented an emergency event
+       otherCost: an integer >= 0. It is the cost of the activity that was not selected, in the same pair.
+       selected: an integer from -1 to 2 (inclusive). It is used to determine if the user is selecting an activity from a pair for the 1st time. -1 represented an emergency event.
   
-  Post: updates userProgress object accordingly to the button clicked,
+  Post: updates userProgress object accordingly to the button clicked
 */
 
 function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected) {
@@ -337,35 +425,15 @@ function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected
     else{
       userProgress.emergency = 0
       userProgress.budget = userProgress.budget + remainder
-      document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget;
+      document.getElementById("budget-display").textContent = "Budget: $" + userProgress.budget;
     }
     return;
-    /*
-    const emergencyInput = document.getElementById('emergency-amount');
-    let emergency = Number(emergencyInput?.value) || 0;
-    const vetCost = 50;
-
-    if (emergency >= vetCost) {
-      emergency -= vetCost;
-    } else {
-      const remainder = vetCost - emergency;
-      emergency = 0;
-      userProgress.budget -= remainder;
-    }
-
-    
-    emergencyInput.value = emergency.toFixed(2)
-    document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget;
-    updateHappinessBar();
-    return; 
-    */
   }
-
-  // Button
-  if (selected === 0) {
+  else if (selected === 0) {
     userProgress.happiness += happiness;
     userProgress.budget -= cost;
-  } else {
+  } 
+  else {
     userProgress.happiness -= otherHappiness;
     userProgress.happiness += happiness;
 
@@ -374,16 +442,14 @@ function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected
   }
 
   updateHappinessBar();
-  document.getElementById("budget-display").innerText = "Budget: $" + userProgress.budget;
+  document.getElementById("budget-display").textContent = "Budget: $" + userProgress.budget;
 }
 
-//Main Game
-function game() {
 
+
+function game() {
+  // Reset tracking variables
   resetChoiceButtons();
-  mornChosen = false;
-  middayChosen = false;
-  nightChosen = false;
 
   mornSelected = 0;
   nightSelected = 0;
@@ -393,16 +459,16 @@ function game() {
 
   budgetElement.innerText = "Budget: $" + userProgress.budget;
 
-  if (i <= 4) {
+  if (day <= 4) {
+    if (day === 0) {
+      dayTag.innerText = "Monday";
+    } 
+    else if (day === 1) {
+      dayTag.innerText = "Tuesday";
+    } 
+    else if (day === 2) {
+      dayTag.innerText = "Wednesday";
 
-    let day = document.getElementById("week-day");
-    if (i === 0) {
-      day.innerText = "Monday";
-    } else if (i === 1) {
-      day.innerText = "Tuesday";
-    } else if (i === 2) {
-      day.innerText = "Wednesday";
-      console.log(userProgress.emergency)
       if (userProgress.emergency === 0 || userProgress.emergency === undefined){
         alert("❗Emergency!❗ \n" +
             "Your pet got sick, and the vet visit cost you $50 \n" + 
@@ -413,32 +479,16 @@ function game() {
             "Your pet got sick, and the vet visit cost you $50 \n" + 
             "Since you saved money for an emergency, $50 will be deducted there and any leftovers will be deducted from your budget");        
       }
-      
       updateUserProgress(0, 0, 0, 0, -1);
        
-    } else if (i === 3) {
-      day.innerText = "Thursday";
-    } else if (i === 4) {
-      day.innerText = "Friday";
-    } else {
-      day.innerText = "End of the week!";
-    }
-
-    //button variables
-    const mornBtn1 = document.getElementById("morn-choice1");
-    const mornBtn2 = document.getElementById("morn-choice2");
-    const midBtn1 = document.getElementById("mid-choice1");
-    const midBtn2 = document.getElementById("mid-choice2");
-    const nightBtn1 = document.getElementById("night-choice1");
-    const nightBtn2 = document.getElementById("night-choice2");
-
-    // Re-enable buttons at the start of the scene
-    mornBtn1.classList.remove("button-selected");
-    mornBtn2.classList.remove("button-selected");
-    midBtn1.classList.remove("button-selected");
-    midBtn2.classList.remove("button-selected");
-    nightBtn1.classList.remove("button-selected");
-    nightBtn2.classList.remove("button-selected");
+    } 
+    else if (day === 3) {
+      dayTag.innerText = "Thursday";
+    } 
+    else if (day === 4) {
+      dayTag.innerText = "Friday";
+    } 
+    
 
     // Randomly pick a morning activity (repeats activity)
     const morningActivityIndex = Math.floor(Math.random() * (morningScenes.length));
@@ -469,7 +519,7 @@ function game() {
     morningChoice2Icon.src = morningActivity.choices[1].iconPath;
 
     mornBtn1.onclick = function () {
-      // Only change userProgress if the user clicks on this activity for the 1st time or changing it to this activity
+      // Only call updateUserProgress() if the user clicks on this activity for the 1st time or changing it to this activity
       if (mornSelected !== 1) {
         updateUserProgress(morningActivity.choices[0].happiness,
           morningActivity.choices[0].cost,
@@ -479,7 +529,6 @@ function game() {
       }
 
       mornSelected = 1;
-      mornChosen = true;
       checkNext();
 
       mornBtn1.classList.add("button-selected");
@@ -497,7 +546,6 @@ function game() {
       }
 
       mornSelected = 2;
-      mornChosen = true;
       checkNext();
 
       mornBtn2.classList.add("button-selected");
@@ -545,7 +593,6 @@ function game() {
       }
 
       middaySelected = 1;
-      middayChosen = true;
       checkNext();
 
 
@@ -564,7 +611,6 @@ function game() {
       }
 
       middaySelected = 2;
-      middayChosen = true;
       checkNext();
 
       midBtn2.classList.add("button-selected");
@@ -610,7 +656,6 @@ function game() {
       }
 
       nightSelected = 1;
-      nightChosen = true;
       checkNext();
 
       nightBtn1.classList.add("button-selected");
@@ -628,13 +673,25 @@ function game() {
       }
 
       nightSelected = 2;
-      nightChosen = true;
       checkNext();
       
       nightBtn2.classList.add("button-selected");
       nightBtn1.classList.remove("button-selected");
     };
-  } else {
-    console.log("done");
   }
 }
+
+// Event listeners
+document.getElementById("start-button").addEventListener("click", goToInstructionPage); //start button on welcome page
+document.getElementById("game-button").addEventListener("click", goToMainPage); //start button on instructions pa
+document.getElementById("right-arrow").addEventListener("click", function () {
+  if (day < 4) {
+    day++;
+    game();
+  } else {
+    goToEndPage();
+  }
+});
+document.getElementById("reload-btn").addEventListener("click", function () {
+  window.location.reload();
+}); //reload button

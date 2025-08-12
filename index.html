@@ -5,82 +5,85 @@
     <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>game 3</title>
+    <title>Budget Simulator</title>
 </head>
 
 <body>
     <div class="main-container">
         <div class="notification-bar">
             <p class="logo">MyFiLi 📶</p>
-
         </div>
 
         <div class="welcome-page" id="welcome-page">
-            <h1>
+            <h2>
                 <span >Welcome to <br></span>
-                <span style="color: rgb(9, 74, 194); font-size: 50px;"> <bold>Budget Simulator</bold>  </span>
+                <span class="game-title"> <strong>Budget Simulator</strong>  </span>
+            </h2>
 
-            </h1>
-            
-           
             <button class="start-button" id="start-button">Start Game</button>
-
         </div>
 
         <div class="instruction-page hide" id="instruction-page">
             <div class="how-to-play">
                 <h2>How to Play</h2>
+
                 <p>You have <strong>$700</strong> to spend from Monday to Friday. Each day, make choices about how to
-                    use your money. Each activity has a happiness score. Balance between budgeting and being happy.</p>
+                    use your money. Each activity has a happiness score. Balance between budgeting and being happy.
+                </p>
+
                 <p><strong>Goal:</strong> Spend your money wisely! <br>
                     To win, you must have spent all your money or have some
-                    left over by the end of the week <strong>and</strong> have the happiness bar at least 50%.</p>
+                    left over by the end of the week <strong>and</strong> have the happiness bar at least 50%.
+                </p>
+
                 <p><strong>Watch out:</strong> If you end the week in debt, you lose the game.</p>
             </div>
             
             <h3>Before you start your week, decide on the following activities <br>
-                (You cannot change them after you've started).</h3>
+                (You cannot change them after you've started).
+            </h3>
 
             <div class="row">
                 <form>
                     <label for="rent-amount">Here is your rent for this week:</label>
                     <br>
-                    <input type="number" id="rent-amount" name="rent-amount" value="500" disabled />
+                    <input id="rent-amount" type="number" name="rent-amount" value="500" disabled />
 
                     <br>
                     <br>
 
                     <label for="invest-amount">How much do you want to invest your money?</label>
                     <br>
-                    <input type="number" id="invest-amount" name="invest-amount" value="0" />
+                    <input id="invest-amount" type="number" name="invest-amount" value="0" />
 
                     <br>
                     <br>
 
                     <label for="emergency-amount">How much do you want to put into your emergency savings?</label>
                     <br>
-                    <input type="number" id="emergency-amount" name="emergency-amount" value="0" />
+                    <input id="emergency-amount" type="number" name="emergency-amount" value="0" />
 
                     <br>
                     <br>
-                    <button type="submit" id="my-bttn" class="start-button">Start Game</button>
+                    <button id="game-button" type="submit" class="start-button">Start Game</button>
                 </form>
             </div>
-
         </div>
 
 
         <div class="main-page hide" id="main-page">
             <div class="nav">
-                <h2 style="margin-top: 2vh" id="week-day"></h2>
+                <h2 style="margin-top: 2vh" id="week-day" ></h2>
             </div>
 
             <div class="first-row">
-                    <div> Happiness Bar </div>
+                <div> Happiness Bar </div>
                     <div class="progress-bar">
                         <div class="bar" id="bar"></div>
                     </div>
+
                     <div class="week-day" id="week-day"></div>
+
                     <div class="budget" id="budget-display"></div>
                 </div>
                 
@@ -103,6 +106,7 @@
                         </button>
                     </div>
                 </div>
+
                 <div class="row">
                     <h2>Midday</h2>
                     <h3 id="midday"></h3>
@@ -119,6 +123,7 @@
                         </button>
                     </div>
                 </div>
+                
                 <div class="row">
                     <h2>Night</h2>
                     <h3 id="night"></h3>
@@ -139,7 +144,7 @@
                 </div>
 
                 <div class="nav2">
-                    <button id="right-arrow" id="right-arrow">Next<img src="icons/right-arrow.svg" /></button>
+                    <button id="right-arrow" id="right-arrow" disabled>Next<img src="icons/right-arrow.svg" /></button>
                 </div>
 
             </div>
@@ -148,13 +153,20 @@
 
 
         <div class="hide" id="end-screen">
-            <h1>🎉Done!</h1>
+            <h2>🎉Done!</h2>
             <h3 id="final-budget"></h3>
-            <h3 id="hScore"></h3>
+            <h3 id="happiness-score"></h3>
             <h3 id="final-happy"></h3>
+
             <button id="reload-btn" class="start-button">
                 🔁 Play Again
             </button>
+            
+            <div class="final-img-container">
+                <img id="final-img" src="" alt="Final Result">
+            </div>
+            
+            
         </div>
 
 
@@ -162,6 +174,7 @@
 
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <audio id="lesson-complete-sound" src="https://www.myfili.com/wp-content/uploads/2024/07/lessson-complete.mp3" preload="auto"></audio>
 </body>
 
 </html>
