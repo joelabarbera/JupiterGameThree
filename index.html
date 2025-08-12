@@ -27,7 +27,7 @@
             <div class="how-to-play">
                 <h2>How to Play</h2>
 
-                <p>You have <strong>$700</strong> to spend from Monday to Friday. Each day, make choices about how to
+                <p>You have <strong>$800</strong> to spend from Monday to Friday. Each day, make choices about how to
                     use your money. Each activity has a happiness score. Balance between budgeting and being happy.
                 </p>
 
@@ -65,7 +65,7 @@
 
                     <br>
                     <br>
-                    <button id="game-button" type="submit" class="start-button">Start Game</button>
+                    <button id="game-button" type="submit" class="game-button">Start Game</button>
                 </form>
             </div>
         </div>
@@ -153,12 +153,12 @@
 
 
         <div class="hide" id="end-screen">
-            <h2>🎉Done!</h2>
+            <h2 class = "end-screen-title">🎉Done!</h2>
             <h3 id="final-budget"></h3>
             <h3 id="happiness-score"></h3>
             <h3 id="final-happy"></h3>
 
-            <button id="reload-btn" class="start-button">
+            <button id="reload-btn" class="game-button">
                 🔁 Play Again
             </button>
             
@@ -175,6 +175,7 @@
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <audio id="lesson-complete-sound" src="https://www.myfili.com/wp-content/uploads/2024/07/lessson-complete.mp3" preload="auto"></audio>
+    <audio id="lose-sound" src="https://www.myfili.com/wp-content/uploads/2024/07/incorrect2.mp3" preload="auto"></audio>
 </body>
 
 </html>

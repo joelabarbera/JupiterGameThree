@@ -123,8 +123,8 @@ const middayScenes = [
   {
     prompt: "You see a new pet toy online. What do you do?",
     choices: [
-      { text: "Buy it", cost: 0, happiness: 1, iconPath: 'icons/buy.svg' },
-      { text: "Don't buy it", cost: 10, happiness: 0, iconPath: 'icons/dont-buy.svg' }
+      { text: "Buy it", cost: 10, happiness: 1, iconPath: 'icons/buy.svg' },
+      { text: "Don't buy it", cost: 0, happiness: 0, iconPath: 'icons/dont-buy.svg' }
     ]
   },
   /*
@@ -312,16 +312,10 @@ function goToEndPage() {
   const finalImageS = document.getElementById("final-img");
   
   const winSound = document.getElementById("lesson-complete-sound");
+  winSound.volume = 0.2
   const loseSound = document.getElementById("lose-sound");
+  loseSound.volumne = 0.2
 
-  if(winSound)
-  {
-    winSound.volume = 0.2;
-  }
-  if(loseSound)
-  {
-    loseSound.volume = 0.2;
-  }
 
   let finHappy = document.getElementById("final-happy");
   if (userProgress.happiness >= 40) {
