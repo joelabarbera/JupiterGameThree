@@ -27,7 +27,7 @@ body {
   text-align: center;
   border: 0.5rem ridge black;
   background-color: seashell;
-  outline: 0.5rem ridge lightgray;
+  outline: 0.5rem ridge lightgray; 
   height: 100%;
   overflow: hidden;
   width: 100%;
@@ -108,6 +108,7 @@ body {
 /* The following styles are for the welcome page */
 .welcome-page{
   align-items: center;
+  color: white;
 }
 .welcome-page::before {
   background-image: url("https://www.myfili.com/wp-content/uploads/2025/08/welcome-image.png");
@@ -301,5 +302,14 @@ img {
 
 .end-screen-title{
   font-size: 32px;
-  color: rgb(93, 5, 5);
+  color: rgb(163, 13, 13);
+  text-shadow: 2px 2px #ed6a13;
+}
+
+#final-img{
+display: block;       
+  max-width: 300px;    
+  width: 100%;          
+  height: auto;         
+  margin: 0 auto; 
 }

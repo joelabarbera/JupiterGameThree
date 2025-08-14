@@ -164,7 +164,7 @@ const nightScenes = [
   {
     prompt: "It's dinner time. What do you eat?",
     choices: [
-      { text: "Order pizza", cost: 18, happiness: 1, iconPath: '/icons/pizza.svg'  },
+      { text: "Order pizza", cost: 18, happiness: 1, iconPath: '/icons/pizza.svg' },
       { text: "Cook dinner at home", cost: 5, happiness: 0, iconPath: '/icons/cook-at-home.svg' }
     ]
   },
@@ -252,30 +252,30 @@ function goToMainPage(event) {
   const investAmount = parseInt(document.getElementById('invest-amount').value);
   const emergencyAmount = parseInt(document.getElementById('emergency-amount').value);
 
-  
-  if (rentAmount + investAmount + emergencyAmount > 700){
+
+  if (rentAmount + investAmount + emergencyAmount > 700) {
     alert("You have exceeded the budget. Please try again");
   }
-  else if (isNaN(investAmount) || isNaN(emergencyAmount)){
+  else if (isNaN(investAmount) || isNaN(emergencyAmount)) {
     alert("You are missing an input. Put 0 if you don't want to put any money into it.")
   }
-  else{
+  else {
     userProgress.emergency = emergencyAmount;
     userProgress.invest = investAmount;
 
-    console.log(userProgress.budget, emergencyAmount, investAmount ,userProgress.rent)
+    console.log(userProgress.budget, emergencyAmount, investAmount, userProgress.rent)
     userProgress.budget = userProgress.budget - emergencyAmount - investAmount - userProgress.rent;
 
 
 
-  const instructionPageTag = document.getElementById("instruction-page");
-  instructionPageTag.classList.add("hide");
+    const instructionPageTag = document.getElementById("instruction-page");
+    instructionPageTag.classList.add("hide");
 
-  const mainPageTag = document.getElementById("main-page");
-  mainPageTag.classList.remove("hide");
+    const mainPageTag = document.getElementById("main-page");
+    mainPageTag.classList.remove("hide");
 
-  game();
-  console.log("test");
+    game();
+    console.log("test");
 
   }
 
@@ -290,12 +290,11 @@ function goToEndPage() {
   endScreen.classList.remove("hide");
 
   const finalImageS = document.getElementById("final-img");
-  
+
   const winSound = document.getElementById("lesson-complete-sound");
   winSound.volume = 0.2
   const loseSound = document.getElementById("lose-sound");
-  loseSound.volumne = 0.2
-
+  loseSound.volume = 0.2
 
   let finHappy = document.getElementById("final-happy");
   if (userProgress.happiness >= 40) {
@@ -312,9 +311,18 @@ function goToEndPage() {
   finHappy.innerText = message;
   document.getElementById("happiness-score").textContent = "Final Happiness: " + userProgress.happiness;
 
+  document.getElementById("invested-amount").textContent = `Invested: $${userProgress.invest || 0}`;
+  document.getElementById("emergency-amount").textContent = `Emergency Savings: $${userProgress.emergency || 0}`;
+
+  const happinessPercentage = Math.round((userProgress.happiness / 15) * 100);
+  document.getElementById("happiness-percentage").textContent = `Happiness: ${happinessPercentage}%`;
+
+
   let finBudget = document.getElementById("final-budget");
   if (userProgress.budget >= 0) {
     finBudget.innerText = "Congrats you did not go over budget! Final Total: $" + userProgress.budget;
+    finBudget.style.color = "green";
+    finBudget.style.textShadow = "2px 2px 4px #51ba3f";
     confetti({
       particleCount: 250,
       spread: 80,
@@ -323,27 +331,25 @@ function goToEndPage() {
     winSound.play();
   } else {
     finBudget.innerText = "You failed. Budget: " + userProgress.budget.toFixed(2);
+    finBudget.style.color = "red";
+    finBudget.style.textShadow = "2px 2px 4px rgb(248, 94, 33)";
     loseSound.play();
   }
 
   //Determining which image to display at the end
   let happinessPercent = (userProgress.happiness / 15) * 100;
   let imgChosen = "";
-  if(userProgress.budget <= 0 && userProgress.happinessPercent <= 50)
-  {
-    imgChosen = "https://www.myfili.com/wp-content/uploads/2025/08/poor-unhappy.png";
+  if (userProgress.budget <= 0 && happinessPercent <= 50) {
+    imgChosen = "images/scenario_1.png";
   }
-  else if(userProgress.budget >= 0 && userProgress.happinessPercent <= 50)
-  {
-    imgChosen = "https://www.myfili.com/wp-content/uploads/2025/08/rich-unhappy.png";
+  else if (userProgress.budget >= 0 && happinessPercent <= 50) {
+    imgChosen = "images/scenario_2.png";
   }
-  else if(userProgress.budget <= 0 && userProgress.happinessPercent >= 50)
-  {
-    imgChosen = "https://www.myfili.com/wp-content/uploads/2025/08/poor-happy.png";
+  else if (userProgress.budget <= 0 && happinessPercent >= 50) {
+    imgChosen = "images/scenario_3.png";
   }
-  else
-  {
-    imgChosen = "https://www.myfili.com/wp-content/uploads/2025/08/rich-happy.png";
+  else {
+    imgChosen = "images/scenario_4.png";
   }
 
   finalImageS.src = imgChosen;
@@ -361,8 +367,8 @@ function updateHappinessBar() {
 // This function resets the style, makes the buttons clickable, and is used when user goes to next day
 function resetChoiceButtons() {
   const buttons = ["morn-choice1", "morn-choice2",
-                   "mid-choice1", "mid-choice2",
-                   "night-choice1", "night-choice2"];
+    "mid-choice1", "mid-choice2",
+    "night-choice1", "night-choice2"];
 
   buttons.forEach(id => {
     const btn = document.getElementById(id);
@@ -373,7 +379,7 @@ function resetChoiceButtons() {
   });
 }
 
-function checkNext(){
+function checkNext() {
   rArrow.disabled = !(mornSelected !== 0 && middaySelected !== 0 && nightSelected !== 0)
 }
 
@@ -393,10 +399,10 @@ function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected
   if (selected === -1) {
     const remainder = userProgress.emergency - 50;
 
-    if (userProgress.emergency >= 50)[
+    if (userProgress.emergency >= 50) [
       userProgress.emergency = remainder
     ]
-    else{
+    else {
       userProgress.emergency = 0
       userProgress.budget = userProgress.budget + remainder
       document.getElementById("budget-display").textContent = "Budget: $" + userProgress.budget;
@@ -406,7 +412,7 @@ function updateUserProgress(happiness, cost, otherHappiness, otherCost, selected
   else if (selected === 0) {
     userProgress.happiness += happiness;
     userProgress.budget -= cost;
-  } 
+  }
   else {
     userProgress.happiness -= otherHappiness;
     userProgress.happiness += happiness;
@@ -436,33 +442,33 @@ function game() {
   if (day <= 4) {
     if (day === 0) {
       dayTag.innerText = "Monday";
-    } 
+    }
     else if (day === 1) {
       dayTag.innerText = "Tuesday";
-    } 
+    }
     else if (day === 2) {
       dayTag.innerText = "Wednesday";
 
-      if (userProgress.emergency === 0 || userProgress.emergency === undefined){
+      if (userProgress.emergency === 0 || userProgress.emergency === undefined) {
         alert("❗Emergency!❗ \n" +
-            "Your pet got sick, and the vet visit cost you $50 \n" + 
-            "Since you don't have any money saved for an emergency, $50 will be deducted from your budget.");
+          "Your pet got sick, and the vet visit cost you $50 \n" +
+          "Since you don't have any money saved for an emergency, $50 will be deducted from your budget.");
       }
-      else{
+      else {
         alert("❗Emergency!❗ \n" +
-            "Your pet got sick, and the vet visit cost you $50 \n" + 
-            "Since you saved money for an emergency, $50 will be deducted there and any leftovers will be deducted from your budget");        
+          "Your pet got sick, and the vet visit cost you $50 \n" +
+          "Since you saved money for an emergency, $50 will be deducted there and any leftovers will be deducted from your budget");
       }
       updateUserProgress(0, 0, 0, 0, -1);
-       
-    } 
+
+    }
     else if (day === 3) {
       dayTag.innerText = "Thursday";
-    } 
+    }
     else if (day === 4) {
       dayTag.innerText = "Friday";
-    } 
-    
+    }
+
 
     // Randomly pick a morning activity (repeats activity)
     const morningActivityIndex = Math.floor(Math.random() * (morningScenes.length));
@@ -648,7 +654,7 @@ function game() {
 
       nightSelected = 2;
       checkNext();
-      
+
       nightBtn2.classList.add("button-selected");
       nightBtn1.classList.remove("button-selected");
     };

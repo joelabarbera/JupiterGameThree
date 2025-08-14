@@ -16,8 +16,8 @@
 
         <div class="welcome-page" id="welcome-page">
             <h2>
-                <span >Welcome to <br></span>
-                <span class="game-title"> <strong>Budget Simulator</strong>  </span>
+                <span>Welcome to <br></span>
+                <span class="game-title"> <strong>Budget Simulator</strong> </span>
             </h2>
 
             <button class="start-button" id="start-button">Start Game</button>
@@ -38,7 +38,7 @@
 
                 <p><strong>Watch out:</strong> If you end the week in debt, you lose the game.</p>
             </div>
-            
+
             <h3>Before you start your week, decide on the following activities <br>
                 (You cannot change them after you've started).
             </h3>
@@ -73,20 +73,20 @@
 
         <div class="main-page hide" id="main-page">
             <div class="nav">
-                <h2 style="margin-top: 2vh" id="week-day" ></h2>
+                <h2 style="margin-top: 2vh" id="week-day"></h2>
             </div>
 
             <div class="first-row">
                 <div> Happiness Bar </div>
-                    <div class="progress-bar">
-                        <div class="bar" id="bar"></div>
-                    </div>
-
-                    <div class="week-day" id="week-day"></div>
-
-                    <div class="budget" id="budget-display"></div>
+                <div class="progress-bar">
+                    <div class="bar" id="bar"></div>
                 </div>
-                
+
+                <div class="week-day" id="week-day"></div>
+
+                <div class="budget" id="budget-display"></div>
+            </div>
+
             <div class="activites">
                 <div class="row">
                     <h2>Morning</h2>
@@ -123,7 +123,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <h2>Night</h2>
                     <h3 id="night"></h3>
@@ -153,20 +153,26 @@
 
 
         <div class="hide" id="end-screen">
-            <h2 class = "end-screen-title">🎉Done!</h2>
-            <h3 id="final-budget"></h3>
-            <h3 id="happiness-score"></h3>
+            <h1 class="end-screen-title">🎉Done!</h1>
+            <h2 id="final-budget"></h2>
             <h3 id="final-happy"></h3>
+
+            <div id="final-stats">
+            <h3 id="invested-amount"></h3>
+            <h3 id="emergency-amount"></h3>
+            <h3 id="happiness-percentage"></h3>
+            <h3 id="happiness-score"></h3>
+            </div>
 
             <button id="reload-btn" class="game-button">
                 🔁 Play Again
             </button>
-            
+
             <div class="final-img-container">
                 <img id="final-img" src="" alt="Final Result">
             </div>
-            
-            
+
+
         </div>
 
 
@@ -174,8 +180,10 @@
 
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-    <audio id="lesson-complete-sound" src="https://www.myfili.com/wp-content/uploads/2024/07/lessson-complete.mp3" preload="auto"></audio>
-    <audio id="lose-sound" src="https://www.myfili.com/wp-content/uploads/2024/07/incorrect2.mp3" preload="auto"></audio>
+    <audio id="lesson-complete-sound" src="https://www.myfili.com/wp-content/uploads/2024/07/lessson-complete.mp3"
+        preload="auto"></audio>
+    <audio id="lose-sound" src="https://www.myfili.com/wp-content/uploads/2024/07/incorrect2.mp3"
+        preload="auto"></audio>
 </body>
 
 </html>
