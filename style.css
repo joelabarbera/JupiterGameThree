@@ -27,7 +27,7 @@ body {
   text-align: center;
   border: 0.5rem ridge black;
   background-color: seashell;
-  outline: 0.5rem ridge lightgray; 
+  outline: 0.5rem ridge lightgray;
   height: 100%;
   overflow: hidden;
   width: 100%;
@@ -106,15 +106,16 @@ body {
 }
 
 /* The following styles are for the welcome page */
-.welcome-page{
+.welcome-page {
   align-items: center;
   color: white;
 }
+
 .welcome-page::before {
   background-image: url("https://www.myfili.com/wp-content/uploads/2025/08/welcome-image.png");
 }
 
-.game-title{
+.game-title {
   color: rgb(9, 74, 194);
   font-size: 2em;
 }
@@ -138,13 +139,13 @@ body {
 
 /* The following styles are for the instruction page */
 .how-to-play {
-  border: 2px solid #434242; 
+  border: 2px solid #434242;
   padding: 1em;
   border-radius: 10px;
-  background-color: rgba(250, 247, 247, 0.609); 
+  background-color: rgba(250, 247, 247, 0.609);
   max-width: 80%;
   margin: 1em auto;
-  list-style-position: inside; 
+  list-style-position: inside;
 }
 
 /* The following styles are for the main page */
@@ -291,8 +292,6 @@ input[type="number"] {
   transform: scale(0.95);
 }
 
-
-
 img {
   max-width: 100%;
   height: auto;
@@ -300,16 +299,16 @@ img {
 }
 
 
-.end-screen-title{
+.end-screen-title {
   font-size: 32px;
   color: rgb(163, 13, 13);
   text-shadow: 2px 2px #ed6a13;
 }
 
-#final-img{
-display: block;       
-  max-width: 300px;    
-  width: 100%;          
-  height: auto;         
-  margin: 0 auto; 
+#final-img {
+  display: block;
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
 }

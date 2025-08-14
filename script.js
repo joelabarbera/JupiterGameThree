@@ -2,8 +2,8 @@
 // The following object is used to track the user's progress throughout the game
 const userProgress = {
   happiness: 0,
-  invest: -1,
-  emergency: -1,
+  invest: 0,
+  emergency: 0,
   rent: 500,
   budget: 800
 }
@@ -332,7 +332,8 @@ function goToEndPage() {
   document.getElementById("happiness-score").textContent = "Final Happiness: " + userProgress.happiness;
 
   document.getElementById("invested-amount").textContent = `Invested: $${userProgress.invest || 0}`;
-  document.getElementById("emergency-amount").textContent = `Emergency Savings: $${userProgress.emergency || 0}`;
+  document.getElementById("emergency-final").textContent =
+    `Emergency Savings: $${userProgress.emergency || 0}`;
 
   const happinessPercentage = Math.round((userProgress.happiness / 15) * 100);
   document.getElementById("happiness-percentage").textContent = `Happiness: ${happinessPercentage}%`;
