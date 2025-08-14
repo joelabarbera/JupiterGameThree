@@ -197,32 +197,12 @@ const nightScenes = [
     ]
   }
 
-  /*
-  {
-    prompt: "🧘‍♀️ It's been a long day. Unwind how?",
-    choices: [
-      { text: "Take a bubble bath", cost: 0, happiness: 3 },
-      { text: "Stay up too late on your phone", cost: 0, happiness: -2 }
-    ]
-  },
-  {
-    prompt: "🎲 Quiet night options:",
-    choices: [
-      { text: "Play board games", cost: 0, happiness: 2 },
-      { text: "Buy takeout dessert", cost: 7, happiness: 2 }
-    ]
-  }
-  */
 ];
 
 
 /*
   The variable day is used to keep track of the day that the user is on
-  0 = Monday
-  1 = Tuesday
-  2 = Wednesday
-  3 = Thursday
-  4 = Friday
+  0 = Monday, 1 = Tuesday, 2 = Wednesday, 3 = Thursday, 4 = Friday
 */
 let day = 0;
 const dayTag = document.getElementById("week-day");
